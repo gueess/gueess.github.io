@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品展示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #bio {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #contact {
+            margin-bottom: 20px;
+        }
+
+        #portfolio {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .portfolio-item {
+            width: 300px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>个人作品展示</h1>
+    </header>
+
+    <section>
+        <div id="bio">
+            <h2>个人介绍</h2>
+            <p>你的个人介绍文字在这里。</p>
+        </div>
+
+        <div id="contact">
+            <h2>联系方式</h2>
+            <p>Email: your.email@example.com</p>
+            <p>电话: 123-456-7890</p>
+        </div>
+    </section>
+
+    <section id="portfolio">
+        <!-- 作品预览框 -->
+        <div class="portfolio-item" onclick="openProjectDetails('project1')">
+            <h3>作品标题1</h3>
+            <p>作品描述1</p>
+        </div>
+
+        <div class="portfolio-item" onclick="openProjectDetails('project2')">
+            <h3>作品标题2</h3>
+            <p>作品描述2</p>
+        </div>
+
+        <!-- 添加更多作品预览框 -->
+
+    </section>
+
+    <!-- 作品详情模态框 -->
+    <div id="projectDetailsModal" style="display: none;">
+        <!-- 作品详情内容在这里添加 -->
+        <button onclick="closeProjectDetails()">关闭</button>
+    </div>
+
+    <script>
+        // JavaScript函数用于打开和关闭作品详情模态框
+        function openProjectDetails(projectId) {
+            // 根据项目ID加载作品详情内容，可以通过AJAX请求获取或直接在前端展示
+            var projectDetailsContent = "<h2>作品标题</h2><p>作品详情内容在这里。</p>";
+            
+            // 将内容插入到模态框中
+            document.getElementById('projectDetailsModal').innerHTML = projectDetailsContent;
+            
+            // 显示模态框
+            document.getElementById('projectDetailsModal').style.display = 'block';
+        }
+
+        function closeProjectDetails() {
+            // 关闭模态框
+            document.getElementById('projectDetailsModal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
