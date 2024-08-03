@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长江</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #0a2a6e;
+            color: #f19113;
+            text-align: center;
+            padding: 20px;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #project-details {
+            max-width: 800px;
+            text-align: center;
+        }
+
+        #project-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        /* 新增样式：去除链接的默认样式 */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>长江路演</h1>
+    </header>
+
+    <section>
+        <div id="project-details">
+            <h2 id="project-title">作品标题</h2>
+            <p id="project-description">在长江边，吹着江风，享受歌声。</p>
+            <img id="project-image" src="" alt="作品图片">
+        </div>
+    </section>
+
+    <script>
+        // 获取URL参数的函数
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        // 获取作品信息
+        var projectId = getParameterByName('id');
+        var projectTitle = "作品标题" + projectId;
+        var projectDescription = "作品描述" + projectId;
+        var projectImageUrl = "http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_8896.JPG?e=1722657045&token=O9BIkxPGzT_f8iWySGnR-puayaoyv97B8CIGGBqH:zCNvc08jMN-qlsBpPY02rvPPRu0="; 
+                                // 替换为实际的图片URL
+
+        // 更新页面内容
+        document.getElementById('project-title').innerText = projectTitle;
+        document.getElementById('project-description').innerText = projectDescription;
+        document.getElementById('project-image').src = projectImageUrl;
+    </script>
+
+</body>
+</html>
