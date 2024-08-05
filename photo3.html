@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的摄影作品</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            overflow: hidden; /* 隐藏多余滚动条 */
+        }
+
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory; /* 滚动时自动对齐图片 */
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100vh; /* 确保图片填充整个页面 */
+            object-fit: contain; /* 保持图片比例，可能会有空白区域 */
+            scroll-snap-align: start; /* 滚动时自动对齐图片 */
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            background: #333;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            z-index: 1;
+            transition: top 0.3s; /* 添加平滑的过渡效果 */
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+        }
+
+        .row img {
+            width: auto;
+            height: 100vh; /* 确保图片填充整个页面 */
+            object-fit: contain; /* 保持图片比例 */
+            margin: 0 10px; /* 为并排图片添加水平间距 */
+        }
+    </style>
+</head>
+<body>
+    <div class="header" id="header">
+        <h1>长江边路演</h1>
+    </div>
+    <div class="gallery-container" id="gallery-container">
+        <div class="gallery">
+            <div class="row">
+                <!-- 在这里放置三张并列图片URL -->
+                
+                <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_8896.JPG" alt="摄影作品2">
+                <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_9044.JPG" alt="摄影作品1">
+                <!-- <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_8968.JPG" alt="摄影作品3"> -->
+            </div>
+            <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_8943.JPG" alt="摄影作品4">
+            <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_9124.JPG" alt="摄影作品5">
+            <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_9174.JPG" alt="摄影作品6">
+            <img src="http://shmi1le6f.hn-bkt.clouddn.com/20240714zhangjiangsinging/_MG_9011.JPG" alt="摄影作品7">
+        </div>
+    </div>
+
+
+    <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
+        const galleryContainer = document.getElementById('gallery-container');
+        const headerHeight = header.offsetHeight; // 获取头部的高度
+
+        galleryContainer.addEventListener('scroll', () => {
+            const scrollTop = galleryContainer.scrollTop;
+            if (scrollTop > lastScrollTop) { // 向上滚动
+                header.style.top = '-120px'; // 隐藏头部
+                // if (scrollTop <= 0) {
+                //     header.style.top = '0';
+                // }
+            }
+            else if(scrollTop < lastScrollTop){ //向下滚动
+                    header.style.top = '-120px'
+                if (scrollTop + galleryContainer.clientHeight + headerHeight >= galleryContainer.scrollHeight) {
+                    header.style.top = '0';
+                }
+                if (scrollTop <= 0) {
+                    header.style.top = '0';
+                }
+            }
+                
+            
+            lastScrollTop = scrollTop;
+        });
+    </script>
+</body>
+</html>
