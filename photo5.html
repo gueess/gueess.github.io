@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长江路演</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        #gallery-container {
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 60px;
+        }
+        .top-row, .bottom-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .top-image, .bottom-image, .single-photo {
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+        }
+        .top-image {
+            width: calc(33.33% - 10px);
+            padding-bottom: 48%;
+        }
+        .bottom-image {
+            width: calc(50% - 10px);
+            padding-bottom: 32.67%;
+        }
+        .single-photo-container {
+            width: 100%;
+        }
+        .single-photo {
+            width: 100%;
+            padding-bottom: 66.67%;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            background: #333;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            padding: 5px 0;
+            z-index: 1;
+            transition: top 0.3s;
+        }
+        @media (max-width: 768px) {
+            .top-image, .bottom-image {
+                width: 100%;
+                padding-bottom: 66.67%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container" id="gallery-container">
+        <div class="header" id="header">
+            <h1>长江路演</h1>
+        </div>
+        <div class="gallery">
+            <div class="top-row">
+                <div class="top-image" data-src="https://i.postimg.cc/g030K2xK/MG-9044.jpg"></div>
+                <div class="top-image" data-src="https://i.postimg.cc/FsvVbY1T/MG-8896.jpg"></div>
+                <div class="top-image" data-src="https://i.postimg.cc/wMqPG00B/MG-8968.jpg"></div>
+            </div>
+            <div class="bottom-images">
+                <div class="bottom-image" data-src="https://i.postimg.cc/XJ0rMyRh/MG-9124.jpg"></div>
+                <div class="bottom-image" data-src="https://i.postimg.cc/52C9x2SM/MG-9174.jpg"></div>
+                <div class="bottom-image" data-src="https://i.postimg.cc/50FSgvwR/MG-9011.jpg"></div>
+                <div class="bottom-image" data-src="https://i.postimg.cc/xjMPbvjk/MG-9019.jpg"></div>
+                <div class="single-photo-container">
+                    <div class="single-photo" data-src="https://i.postimg.cc/NGWCtpT4/1633700889696.jpg"></div>
+                    <div class="single-photo" data-src="https://i.postimg.cc/NGWCtpT4/1633700889696.jpg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const header = document.getElementById('header');
+        const galleryContainer = document.getElementById('gallery-container');
+        const headerHeight = header.offsetHeight;
+        let lastScrollTop = 0;
+
+        function lazyLoad() {
+            const images = document.querySelectorAll('.top-image, .bottom-image, .single-photo');
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.style.backgroundImage = `url(${img.dataset.src})`;
+                        observer.unobserve(img);
+                    }
+                });
+            }, options);
+
+            images.forEach(img => observer.observe(img));
+        }
+
+        galleryContainer.addEventListener('scroll', () => {
+            const scrollTop = galleryContainer.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > headerHeight) {
+                header.style.top = '-60px';
+            } else {
+                header.style.top = '0';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        document.addEventListener('DOMContentLoaded', lazyLoad);
+    </script>
+</body>
+</html>
