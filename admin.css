@@ -1,0 +1,467 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* 密码保护界面 */
+.password-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.password-box {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+    text-align: center;
+}
+
+.password-box h2 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.password-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.password-box input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.password-box button {
+    width: 100%;
+    padding: 12px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.password-box button:hover {
+    background: #5568d3;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+/* 主管理界面 */
+.admin-container {
+    min-height: 100vh;
+}
+
+.admin-header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-header h1 {
+    font-size: 24px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-content {
+    display: flex;
+    height: calc(100vh - 70px);
+    gap: 20px;
+    padding: 20px;
+}
+
+.left-panel, .middle-panel, .right-panel {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.left-panel {
+    width: 300px;
+    overflow-y: auto;
+}
+
+.middle-panel {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.right-panel {
+    width: 400px;
+    overflow-y: auto;
+}
+
+.section {
+    padding: 20px;
+}
+
+.section h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5568d3;
+}
+
+.btn-secondary {
+    background: #95a5a6;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #7f8c8d;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+}
+
+/* 上传区域 */
+.upload-area {
+    border: 2px dashed #bdc3c7;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.upload-area.dragover {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.upload-area p {
+    margin-bottom: 15px;
+    color: #7f8c8d;
+}
+
+.upload-progress {
+    margin-top: 15px;
+}
+
+.upload-item {
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-item .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.upload-item .progress-fill {
+    height: 100%;
+    background: #667eea;
+    transition: width 0.3s;
+}
+
+/* 照片库 */
+.photo-library {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.photo-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: move;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.photo-item:hover {
+    border-color: #667eea;
+    transform: scale(1.05);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-item .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.photo-item:hover .delete-btn {
+    opacity: 1;
+}
+
+.empty-message {
+    text-align: center;
+    color: #95a5a6;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+/* 模板选择器 */
+.template-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.template-btn {
+    flex: 1;
+    padding: 12px;
+    background: #ecf0f1;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.template-btn:hover {
+    background: #d5dbdb;
+    border-color: #667eea;
+}
+
+.template-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* 布局编辑器 */
+.layout-editor {
+    min-height: 200px;
+}
+
+.layout-row {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #bdc3c7;
+}
+
+.layout-row.row-3 {
+    display: flex;
+    gap: 10px;
+}
+
+.layout-row.row-2 {
+    display: flex;
+    gap: 10px;
+}
+
+.layout-row.row-1 {
+    display: block;
+}
+
+.slot {
+    background: white;
+    border: 2px dashed #bdc3c7;
+    border-radius: 5px;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.slot.drag-over {
+    border-color: #667eea;
+    background: #f0f4ff;
+}
+
+.slot.has-photo {
+    border-style: solid;
+    border-color: #27ae60;
+    padding: 0;
+    overflow: hidden;
+}
+
+.slot.has-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slot .slot-placeholder {
+    color: #95a5a6;
+    font-size: 12px;
+}
+
+.row-3 .slot {
+    flex: 1;
+    aspect-ratio: 2/3;
+}
+
+.row-2 .slot {
+    flex: 1;
+    aspect-ratio: 3/2;
+}
+
+.row-1 .slot {
+    width: 100%;
+    aspect-ratio: 3/2;
+}
+
+.layout-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.layout-row-header .row-type {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.delete-row-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* 预览区域 */
+.preview-controls {
+    margin-bottom: 15px;
+}
+
+.title-input, .filename-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.title-input:focus, .filename-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.preview-container {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    min-height: 400px;
+}
+
+.preview-container iframe {
+    width: 100%;
+    height: 600px;
+    border: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .admin-content {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .left-panel, .middle-panel, .right-panel {
+        width: 100%;
+        max-height: 500px;
+    }
+}
+

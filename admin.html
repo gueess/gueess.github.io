@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>照片管理后台</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <!-- 密码保护界面 -->
+    <div id="password-screen" class="password-screen">
+        <div class="password-box">
+            <h2>照片管理后台</h2>
+            <div id="password-form">
+                <input type="password" id="password-input" placeholder="请输入密码" autofocus>
+                <button id="password-submit">登录</button>
+            </div>
+            <div id="set-password-form" style="display: none;">
+                <p>首次访问，请设置密码</p>
+                <input type="password" id="new-password-input" placeholder="设置新密码">
+                <input type="password" id="confirm-password-input" placeholder="确认密码">
+                <button id="set-password-submit">设置密码</button>
+            </div>
+            <p id="password-error" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- 主管理界面 -->
+    <div id="admin-container" class="admin-container" style="display: none;">
+        <header class="admin-header">
+            <h1>照片管理后台</h1>
+            <div class="header-actions">
+                <button id="save-config-btn" class="btn btn-secondary">保存配置</button>
+                <button id="publish-btn" class="btn btn-primary">发布页面</button>
+                <button id="logout-btn" class="btn btn-danger">退出</button>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            <!-- 左侧：上传和照片库 -->
+            <div class="left-panel">
+                <div class="section">
+                    <h2>上传照片</h2>
+                    <div class="upload-area" id="upload-area">
+                        <p>拖拽照片到这里或点击选择</p>
+                        <input type="file" id="file-input" multiple accept="image/*" style="display: none;">
+                        <button id="select-files-btn" class="btn btn-primary">选择文件</button>
+                    </div>
+                    <div id="upload-progress" class="upload-progress"></div>
+                </div>
+
+                <div class="section">
+                    <h2>照片库</h2>
+                    <div id="photo-library" class="photo-library">
+                        <p class="empty-message">暂无照片，请先上传</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 中间：布局编辑器 -->
+            <div class="middle-panel">
+                <div class="section">
+                    <h2>布局编辑器</h2>
+                    <div class="template-selector">
+                        <button class="template-btn" data-type="row-3">一排三个</button>
+                        <button class="template-btn" data-type="row-2">一排两个</button>
+                        <button class="template-btn" data-type="row-1">一排一个</button>
+                    </div>
+                    <div id="layout-editor" class="layout-editor">
+                        <p class="empty-message">点击上方按钮添加布局行</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧：预览 -->
+            <div class="right-panel">
+                <div class="section">
+                    <h2>预览</h2>
+                    <div class="preview-controls">
+                        <input type="text" id="album-title-input" placeholder="相册标题" class="title-input">
+                        <input type="text" id="album-filename-input" placeholder="文件名（如：photo-new.html）" class="filename-input">
+                    </div>
+                    <div id="preview-container" class="preview-container">
+                        <p class="empty-message">添加照片后预览效果</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
+
