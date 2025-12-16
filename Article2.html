@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我用 Python 写了一个即刻监控机器人，自动帮我筛选高质量内容</title>
+    <!-- 引入 marked 库（确保 CDN 链接有效） -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@14.1.2/marked.min.js"></script>
+    <!-- 引入 GitHub 风格样式，确保渲染美观 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown.min.css">
+    <style>
+        /* 页面容器样式，优化居中显示 */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        /* 修复移动端适配 */
+        .markdown-body {
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        /* 返回首页链接样式 */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #0366d6;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回首页</a>
+        <!-- Markdown 渲染容器，必须添加 markdown-body 类才能应用 GitHub 样式 -->
+        <div class="markdown-body" id="mdContainer"></div>
+    </div>
+
+    <script>
+        // Markdown 内容
+        const mdContent = `# 我用 Python 写了一个即刻监控机器人，自动帮我筛选高质量内容
+
+> 一个周末的折腾记录：从抓包到定时任务，把即刻关注的大佬们的精华内容自动收进 Cubox。
+
+---
+
+## 起因：信息焦虑与阅读习惯的矛盾
+
+我在即刻上关注了一些很有价值的创作者——孟岩、李继刚、hidecloud、Kenny 等。他们的输出质量很高，但问题是：
+
+**我没有刷即刻的习惯。**
+
+我的阅读习惯是用 Cubox 做稍后读，每天集中时间处理收藏的内容。但即刻的内容散落在时间线里，很容易错过。
+
+于是我想：**能不能让机器帮我盯着这些人，把他们发的长文和外链自动推到 Cubox？**
+
+这就是这个项目的起点。
+
+---
+
+## 需求拆解：我到底想要什么？
+
+在动手之前，我先想清楚了几个问题：
+
+### 1. 监控谁？
+
+不是监控整个时间线，而是**只监控特定的几个用户**。我关注的人很多，但真正值得每条都看的只有几个。
+
+### 2. 筛选什么？
+
+即刻上的内容鱼龙混杂。同一个人可能上午发一篇深度思考，下午发一条"早安打卡"。我只想要：
+
+- **长文**：超过 500 字的原创内容，通常是深度思考或复盘
+
+- **外链文章**：分享的微信公众号、博客、播客等链接
+
+### 3. 推到哪里？
+
+Cubox。它有开放 API，可以通过 HTTP 请求直接推送内容。
+
+### 4. 如何避免重复推送？
+
+脚本可能每 15 分钟跑一次，需要记住上次处理到哪条动态，只处理新的。
+
+---
+
+## 技术挑战：即刻没有公开 API
+
+这是整个项目最麻烦的部分。
+
+即刻没有官方的开发者文档，也没有公开的 API。这意味着我需要自己**抓包**，搞清楚：
+
+1. API 端点是什么？
+
+2. 请求需要什么参数？
+
+3. 认证方式是什么？
+
+### 抓包过程
+
+我用 Chrome 开发者工具抓取了即刻网页版的请求。步骤如下：
+
+1. 打开 \`https://web.okjike.com\` 并登录
+
+2. 打开开发者工具 → Network 面板 → 勾选 "Preserve log"
+
+3. 点击某个用户的头像，进入他的主页
+
+4. 在请求列表中找到一个 POST 请求，URL 包含 \`single\`
+
+找到了：
+
+\`\`\`
+POST https://api.ruguoapp.com/1.0/personalUpdate/single
+\`\`\`
+
+请求体：
+
+\`\`\`json
+{
+  "username": "E04918BA-823C-4284-B2FA-7E00D0849023",
+  "limit": 20
+}
+\`\`\`
+
+这里有个坑：\`username\` 参数传的不是用户名，而是用户的 **UUID**。这个 UUID 也需要通过抓包获取。
+
+认证方式是在请求头里加一个 \`x-jike-access-token\`，值是一个 JWT Token。
+
+### 踩过的坑
+
+抓包过程中遇到了不少干扰项：
+
+- \`socket.io\` 请求：实时消息通道，不是我要的
+
+- \`sa.gif\` 请求：埋点统计，数据是 Base64 编码的
+
+- \`sentry\` 请求：错误监控服务
+
+- 旧代码里的 \`app.jike.ruguoapp.com\`：已经失效了
+
+最终确认的关键信息：
+
+| 项目 | 值 |
+|------|-----|
+| API 域名 | \`https://api.ruguoapp.com\` |
+| 获取用户动态 | \`POST /1.0/personalUpdate/single\` |
+| 认证方式 | Header: \`x-jike-access-token\` |
+| 请求参数 | \`{"username": "用户UUID", "limit": 20}\` |
+
+---
+
+## 实现：200 行 Python 搞定
+
+整个脚本不到 300 行，核心逻辑很简单：
+
+\`\`\`
+读取配置 → 遍历用户列表 → 获取动态 → 筛选符合条件的 → 推送到 Cubox → 记录进度
+\`\`\`
+
+### 核心筛选逻辑
+
+\`\`\`python
+def is_post_eligible(post, blacklist=None):
+    """判断一条动态是否符合推送条件"""
+    
+    content = post.get("content", "")
+    link_info = post.get("linkInfo")
+    
+    # 1. 黑名单过滤
+    if blacklist:
+        for keyword in blacklist:
+            if keyword in content:
+                return False  # 包含黑名单关键词，排除
+    
+    # 2. 有外链就推送
+    if link_info and link_info.get("linkUrl"):
+        return True
+        
+    # 3. 超过 500 字就推送
+    if len(content) > 500:
+        return True
+        
+    return False
+\`\`\`
+
+### 推送到 Cubox
+
+Cubox 支持两种类型：
+
+- **URL 类型**：直接保存链接，Cubox 会自动抓取全文
+
+- **Memo 类型**：保存纯文本笔记
+
+我的策略是：
+
+- 外链文章 → URL 类型（让 Cubox 去抓取原文）
+
+- 长文 → Memo 类型（直接保存正文，附带作者和即刻链接）
+
+\`\`\`python
+def push_to_cubox(post, config):
+    link_info = post.get("linkInfo")
+    
+    if link_info and link_info.get("linkUrl"):
+        # 外链：推送 URL
+        payload = {
+            "type": "url",
+            "content": link_info["linkUrl"],
+            "title": link_info.get("title"),
+            "folder": "即刻精选",
+            "tags": ["即刻", "外链"]
+        }
+    else:
+        # 长文：推送 Memo
+        author = post.get("user", {}).get("screenName")
+        content = post.get("content")
+        jike_url = f"https://m.okjike.com/post/{post['id']}"
+        
+        payload = {
+            "type": "memo",
+            "content": f"来源：@{author}\\n链接：{jike_url}\\n\\n{content}",
+            "folder": "即刻精选",
+            "tags": ["即刻", "长文"]
+        }
+    
+    requests.post(cubox_api_url, json=payload)
+\`\`\`
+
+### 状态保持：避免重复推送
+
+每次运行脚本后，我会记录每个用户最后处理的动态 ID：
+
+\`\`\`json
+{
+  "last_processed_post_id": {
+    "E04918BA-823C-4284-B2FA-7E00D0849023": "692ece696b323d027e6d7b00",
+    "1b279620-79f4-4978-a142-99dc20cddaaf": "691fd7091ed9b53c781d850b"
+  }
+}
+\`\`\`
+
+下次运行时，只处理 ID 大于这个值的动态（即刻的 ID 是时间相关的，越新的 ID 越大）。
+
+---
+
+## 部署：用 cron 实现定时监控
+
+脚本写好后，用 macOS 自带的 cron 设置定时任务：
+
+\`\`\`bash
+crontab -e
+\`\`\`
+
+添加一行：
+
+\`\`\`cron
+*/15 * * * * /usr/bin/python3 /path/to/monitor.py >> /path/to/monitor.log 2>&1
+\`\`\`
+
+这样每 15 分钟自动跑一次，新内容会自动推到 Cubox。
+
+---
+
+## 迭代：黑名单过滤
+
+上线后发现一个问题：**招聘帖也会被推送**。
+
+比如某个大佬发了一条"我们团队在招产品经理"，字数超过 500，就被推到 Cubox 了。
+
+解决方案很简单：加一个**黑名单关键词**列表。
+
+\`\`\`json
+{
+  "blacklist_keywords": [
+    "招聘", "招人", "求职", "岗位", "简历", "HC", "JD", "内推",
+    "广告", "推广", "抽奖", "福利", "优惠",
+    "打卡", "签到", "早安", "晚安", "干饭"
+  ]
+}
+\`\`\`
+
+内容或链接标题包含这些关键词的，直接排除。
+
+这是一个"80/20"的解决方案：
+
+- 简单直接，零成本
+
+- 可以在配置文件里自定义，不用改代码
+
+- 虽然可能误伤（比如"招聘行业趋势分析"），但概率很低
+
+---
+
+## 未来可能的改进
+
+### 1. AI 质量评估
+
+用 LLM（如 DeepSeek）对内容进行质量打分，只推送高质量内容。
+
+\`\`\`
+获取动态 → 黑名单过滤 → AI 评估 → 推送
+\`\`\`
+
+成本估算：每条内容约 500-2000 tokens，用 DeepSeek 大概 0.001 元/条，每天 50 条也就 5 分钱。
+
+### 2. 按用户设置不同规则
+
+某些用户的内容质量稳定高，可以全部推送：
+
+\`\`\`json
+{
+  "user_rules": {
+    "孟岩": {"always_push": true},
+    "某某某": {"min_length": 800}
+  }
+}
+\`\`\`
+
+### 3. 链接域名白名单
+
+只推送特定来源的链接：
+
+\`\`\`json
+{
+  "link_whitelist": ["mp.weixin.qq.com", "xiaoyuzhoufm.com", "github.com"]
+}
+\`\`\`
+
+---
+
+## 总结
+
+这是一个周末项目，解决了一个具体的个人需求：**把即刻上关注的大佬的精华内容自动收进 Cubox**。
+
+技术上没什么难度，核心是：
+
+1. 抓包搞定即刻的非公开 API
+
+2. 用简单的规则（字数 + 外链 + 黑名单）筛选内容
+
+3. 用 cron 实现定时监控
+
+整个项目 300 行代码，一个配置文件，跑在本地 Mac 上，每 15 分钟自动执行一次。
+
+如果你也有类似的需求——监控某个平台的特定内容，自动推送到你的阅读工具——这个思路可以复用。核心就是：**抓包 + 筛选 + 定时任务**。
+
+---
+
+## 项目地址
+
+代码开源在：[GitHub 链接]（如果你需要的话）
+
+有问题欢迎交流。`;
+
+        // 确保 marked 库加载完成后再解析（关键修复）
+        document.addEventListener('DOMContentLoaded', function() {
+            // 验证 marked 是否加载成功
+            if (typeof marked !== 'undefined') {
+                // 解析 Markdown 为 HTML
+                const html = marked.parse(mdContent);
+                // 渲染到页面
+                document.getElementById('mdContainer').innerHTML = html;
+            } else {
+                document.getElementById('mdContainer').innerHTML = '<p style="color: red;">Marked 库加载失败，请检查网络连接或 CDN 链接是否有效！</p>';
+            }
+        });
+    </script>
+</body>
+</html>
+

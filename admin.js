@@ -1,12 +1,18 @@
 // 配置
 const CONFIG = {
-    API_KEY: 'c92de85034e01668a7ccc9ba0eb95d41',
-    API_URL: 'https://postimages.org/api/upload',
+    // Postimg.cc API Key（如果后端代理可用）
+    POSTIMG_API_KEY: 'c92de85034e01668a7ccc9ba0eb95d41',
+    // 使用 sm.ms API（免费，支持 CORS，无需 API Key）
+    USE_SM_MS: true,
+    SM_MS_API_URL: 'https://sm.ms/api/v2/upload',
+    // Postimg.cc API 端点（需要后端代理才能使用）
+    POSTIMG_API_URLS: [
+        'https://postimg.pro/api/1/upload',
+        'https://postimages.org/api/upload',
+        'https://postimg.cc/api/upload'
+    ],
     CONFIG_FILE: 'admin-config.json'
 };
-
-// 注意：postimg.cc API 可能需要不同的参数格式
-// 如果上传失败，可能需要调整 formData 的参数名称
 
 // 全局状态
 let state = {
@@ -193,10 +199,124 @@ async function handleFiles(files) {
 }
 
 async function uploadToPostimg(file, onProgress) {
+    console.log('开始上传照片:', file.name);
+    
+    // 优先使用 sm.ms（支持 CORS，无需 API Key）
+    if (CONFIG.USE_SM_MS) {
+        try {
+            console.log('尝试使用 sm.ms API...');
+            const result = await uploadToSmMs(file, onProgress);
+            console.log('sm.ms 上传成功！');
+            return result;
+        } catch (error) {
+            console.error('sm.ms 上传失败:', error.message);
+            console.log('尝试备用方案...');
+        }
+    }
+    
+    // 备用方案：尝试 postimg.cc（需要后端代理）
+    for (let i = 0; i < CONFIG.POSTIMG_API_URLS.length; i++) {
+        const apiUrl = CONFIG.POSTIMG_API_URLS[i];
+        console.log(`尝试端点 ${i + 1}/${CONFIG.POSTIMG_API_URLS.length}: ${apiUrl}`);
+        try {
+            const result = await tryUpload(file, apiUrl, onProgress);
+            console.log('上传成功！');
+            return result;
+        } catch (error) {
+            console.error(`端点 ${apiUrl} 失败:`, error.message);
+            // 继续尝试下一个端点
+        }
+    }
+    
+    const errorMsg = '所有 API 端点都失败了。请检查：1) 网络连接 2) 浏览器控制台的详细错误信息';
+    console.error(errorMsg);
+    throw new Error(errorMsg);
+}
+
+// 使用 sm.ms API 上传（支持 CORS，免费，无需 API Key）
+async function uploadToSmMs(file, onProgress) {
     return new Promise((resolve, reject) => {
         const formData = new FormData();
-        formData.append('upload', file);
-        formData.append('token', CONFIG.API_KEY);
+        formData.append('smfile', file); // sm.ms 使用 'smfile' 作为参数名
+        
+        const xhr = new XMLHttpRequest();
+        
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                onProgress(percentComplete);
+            }
+        });
+        
+        xhr.addEventListener('load', () => {
+            console.log('[sm.ms] HTTP 状态:', xhr.status);
+            console.log('[sm.ms] 响应内容:', xhr.responseText.substring(0, 500));
+            
+            if (xhr.status === 200) {
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    console.log('[sm.ms] 解析后的响应:', response);
+                    
+                    // sm.ms API 响应格式: { code: 'success', data: { url: '...' } }
+                    if (response.code === 'success' && response.data && response.data.url) {
+                        const imageUrl = response.data.url;
+                        const photo = {
+                            id: 'photo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                            url: imageUrl,
+                            thumbnail: imageUrl,
+                            uploadedAt: new Date().toISOString(),
+                            filename: file.name
+                        };
+                        console.log('[sm.ms] 上传成功:', photo);
+                        resolve(photo);
+                    } else {
+                        const errorMsg = response.msg || response.message || '上传失败';
+                        console.error('[sm.ms] API 错误:', response);
+                        reject(new Error(errorMsg));
+                    }
+                } catch (e) {
+                    console.error('[sm.ms] 解析响应失败:', e);
+                    reject(new Error('解析响应失败: ' + e.message));
+                }
+            } else {
+                const errorMsg = `上传失败: HTTP ${xhr.status}`;
+                console.error('[sm.ms]', errorMsg);
+                reject(new Error(errorMsg + ': ' + xhr.responseText.substring(0, 200)));
+            }
+        });
+        
+        xhr.addEventListener('error', (e) => {
+            console.error('[sm.ms] 网络错误:', e);
+            reject(new Error('网络错误，请检查网络连接'));
+        });
+        
+        xhr.addEventListener('timeout', () => {
+            console.error('[sm.ms] 请求超时');
+            reject(new Error('请求超时'));
+        });
+        
+        xhr.timeout = 60000; // 60秒超时（sm.ms 可能较慢）
+        xhr.open('POST', CONFIG.SM_MS_API_URL);
+        // sm.ms 不需要设置特殊的 header，浏览器会自动设置 Content-Type
+        
+        console.log('[sm.ms] 开始上传文件:', file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+        xhr.send(formData);
+    });
+}
+
+function tryUpload(file, apiUrl, onProgress) {
+    return new Promise((resolve, reject) => {
+        const formData = new FormData();
+        
+        // 根据不同的 API 端点使用不同的参数名
+        if (apiUrl.includes('postimg.pro')) {
+            // postimg.pro API 格式
+            formData.append('source', file);
+        } else {
+            // postimages.org 或其他格式
+            formData.append('upload', file);
+            formData.append('file', file);
+        }
 
         const xhr = new XMLHttpRequest();
 
@@ -208,20 +328,44 @@ async function uploadToPostimg(file, onProgress) {
         });
 
         xhr.addEventListener('load', () => {
-            if (xhr.status === 200) {
+            console.log(`[${apiUrl}] HTTP 状态:`, xhr.status);
+            console.log(`[${apiUrl}] 响应头:`, xhr.getAllResponseHeaders());
+            console.log(`[${apiUrl}] 响应内容:`, xhr.responseText.substring(0, 500));
+            
+            if (xhr.status === 200 || xhr.status === 201) {
                 try {
-                    const response = JSON.parse(xhr.responseText);
-                    // Postimg.cc API 可能返回不同的格式，尝试多种可能的响应格式
+                    let response;
+                    const responseText = xhr.responseText;
+                    
+                    // 尝试解析 JSON
+                    try {
+                        response = JSON.parse(responseText);
+                    } catch (e) {
+                        // 如果不是 JSON，可能是 HTML 或其他格式
+                        console.error(`[${apiUrl}] 响应不是 JSON 格式:`, responseText.substring(0, 200));
+                        reject(new Error('API 返回的不是 JSON 格式，可能是 HTML 错误页面'));
+                        return;
+                    }
+                    
+                    console.log(`[${apiUrl}] 解析后的响应:`, response);
+                    
+                    // 尝试多种可能的响应格式
                     let imageUrl = null;
                     
                     if (response.status === 200 && response.url) {
                         imageUrl = response.url;
                     } else if (response.url) {
                         imageUrl = response.url;
+                    } else if (response.link) {
+                        imageUrl = response.link;
                     } else if (response.image) {
                         imageUrl = response.image.url || response.image;
-                    } else if (response.data && response.data.url) {
-                        imageUrl = response.data.url;
+                    } else if (response.data) {
+                        imageUrl = response.data.url || response.data.link || response.data.image;
+                    } else if (response.thumb) {
+                        imageUrl = response.thumb.url || response.thumb;
+                    } else if (response.status === 'OK' && response.url) {
+                        imageUrl = response.url;
                     }
                     
                     if (imageUrl) {
@@ -237,26 +381,54 @@ async function uploadToPostimg(file, onProgress) {
                             uploadedAt: new Date().toISOString(),
                             filename: file.name
                         };
+                        console.log(`[${apiUrl}] 上传成功:`, photo);
                         resolve(photo);
                     } else {
-                        console.error('API 响应:', response);
-                        reject(new Error('无法从响应中获取图片 URL'));
+                        console.error(`[${apiUrl}] API 响应中没有找到图片 URL:`, response);
+                        reject(new Error('无法从响应中获取图片 URL。响应: ' + JSON.stringify(response).substring(0, 200)));
                     }
                 } catch (e) {
-                    console.error('解析响应失败:', e, xhr.responseText);
+                    console.error(`[${apiUrl}] 解析响应失败:`, e);
+                    console.error(`[${apiUrl}] 原始响应:`, xhr.responseText);
                     reject(new Error('解析响应失败: ' + e.message));
                 }
             } else {
-                reject(new Error('上传失败: HTTP ' + xhr.status));
+                const errorMsg = `上传失败: HTTP ${xhr.status}`;
+                console.error(`[${apiUrl}] ${errorMsg}`);
+                console.error(`[${apiUrl}] 响应内容:`, xhr.responseText.substring(0, 500));
+                reject(new Error(errorMsg + ': ' + xhr.responseText.substring(0, 200)));
             }
         });
 
-        xhr.addEventListener('error', () => {
-            reject(new Error('网络错误'));
+        xhr.addEventListener('error', (e) => {
+            console.error(`[${apiUrl}] 网络错误:`, e);
+            reject(new Error('网络错误，请检查网络连接'));
         });
+        
+        xhr.addEventListener('timeout', () => {
+            console.error(`[${apiUrl}] 请求超时`);
+            reject(new Error('请求超时'));
+        });
+        
+        xhr.timeout = 30000; // 30秒超时
 
-        // 尝试使用正确的 API 端点
-        xhr.open('POST', 'https://postimages.org/api/upload');
+        xhr.open('POST', apiUrl);
+        
+        // 设置 API Key header（如果 API 支持）
+        if (apiUrl.includes('postimg.pro')) {
+            xhr.setRequestHeader('X-API-Key', CONFIG.POSTIMG_API_KEY);
+            console.log(`[${apiUrl}] 使用 Header 方式传递 API Key`);
+        } else {
+            // 其他 API 可能需要在 formData 中传递
+            formData.append('key', CONFIG.POSTIMG_API_KEY);
+            formData.append('token', CONFIG.POSTIMG_API_KEY);
+            console.log(`[${apiUrl}] 使用 FormData 方式传递 API Key`);
+        }
+        
+        // 不要手动设置 Content-Type，让浏览器自动设置（包含 boundary）
+        // xhr.setRequestHeader('Content-Type', 'multipart/form-data'); // 错误！
+        
+        console.log(`[${apiUrl}] 开始上传文件:`, file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
         xhr.send(formData);
     });
 }

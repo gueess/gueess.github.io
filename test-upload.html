@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        #log {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Postimg.cc API 上传测试</h1>
+    
+    <div class="test-section">
+        <h2>测试上传</h2>
+        <input type="file" id="file-input" accept="image/*">
+        <button onclick="testUpload()">测试上传</button>
+    </div>
+
+    <div class="test-section">
+        <h2>测试日志</h2>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const API_KEY = 'c92de85034e01668a7ccc9ba0eb95d41';
+        const API_URLS = [
+            { url: 'https://postimg.pro/api/1/upload', method: 'header', param: 'source' },
+            { url: 'https://postimages.org/api/upload', method: 'form', param: 'upload' },
+            { url: 'https://postimg.cc/api/upload', method: 'form', param: 'upload' },
+            { url: 'https://postimages.org/web', method: 'form', param: 'upload' }
+        ];
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            logDiv.innerHTML += `<span class="${className}">[${time}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        async function testUpload() {
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                log('请先选择文件', 'error');
+                return;
+            }
+
+            log(`开始测试上传: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`);
+            log(`文件类型: ${file.type}`);
+
+            for (let i = 0; i < API_URLS.length; i++) {
+                const apiConfig = API_URLS[i];
+                log(`\n尝试端点 ${i + 1}: ${apiConfig.url}`);
+                log(`方法: ${apiConfig.method}, 参数: ${apiConfig.param}`);
+                
+                try {
+                    const result = await tryUploadMethod(file, apiConfig);
+                    log(`✓ 成功！图片 URL: ${result.url}`, 'success');
+                    log(`完整响应: ${JSON.stringify(result.response, null, 2)}`);
+                    
+                    // 显示图片
+                    const img = document.createElement('img');
+                    img.src = result.url;
+                    img.style.maxWidth = '300px';
+                    img.style.marginTop = '10px';
+                    document.getElementById('log').appendChild(img);
+                    
+                    return;
+                } catch (error) {
+                    log(`✗ 失败: ${error.message}`, 'error');
+                    if (error.response) {
+                        log(`响应内容: ${error.response}`, 'error');
+                    }
+                }
+            }
+            
+            log('\n所有端点都失败了', 'error');
+        }
+
+        function tryUploadMethod(file, apiConfig) {
+            return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                
+                // 根据配置添加文件参数
+                if (apiConfig.param === 'source') {
+                    formData.append('source', file);
+                } else {
+                    formData.append(apiConfig.param, file);
+                }
+
+                // 添加可能的其他参数
+                if (apiConfig.method === 'form') {
+                    formData.append('key', API_KEY);
+                    formData.append('token', API_KEY);
+                }
+
+                const xhr = new XMLHttpRequest();
+
+                xhr.addEventListener('load', () => {
+                    log(`HTTP 状态: ${xhr.status}`);
+                    log(`响应头: ${xhr.getAllResponseHeaders()}`);
+                    
+                    if (xhr.status === 200 || xhr.status === 201) {
+                        try {
+                            let response;
+                            const responseText = xhr.responseText;
+                            log(`原始响应: ${responseText.substring(0, 500)}...`);
+                            
+                            // 尝试解析 JSON
+                            try {
+                                response = JSON.parse(responseText);
+                            } catch (e) {
+                                // 如果不是 JSON，可能是 HTML 或其他格式
+                                log('响应不是 JSON 格式');
+                                reject(new Error('响应不是有效的 JSON: ' + responseText.substring(0, 200)));
+                                return;
+                            }
+
+                            log(`解析后的响应: ${JSON.stringify(response, null, 2)}`);
+
+                            // 尝试多种可能的响应格式
+                            let imageUrl = null;
+                            
+                            if (response.status === 200 && response.url) {
+                                imageUrl = response.url;
+                            } else if (response.url) {
+                                imageUrl = response.url;
+                            } else if (response.link) {
+                                imageUrl = response.link;
+                            } else if (response.image) {
+                                imageUrl = response.image.url || response.image;
+                            } else if (response.data) {
+                                imageUrl = response.data.url || response.data.link || response.data.image;
+                            } else if (response.thumb) {
+                                imageUrl = response.thumb.url || response.thumb;
+                            }
+
+                            if (imageUrl) {
+                                if (!imageUrl.startsWith('http')) {
+                                    imageUrl = 'https://' + imageUrl.replace(/^\/\//, '');
+                                }
+                                resolve({ url: imageUrl, response: response });
+                            } else {
+                                reject(new Error('无法从响应中获取图片 URL。响应: ' + JSON.stringify(response)));
+                            }
+                        } catch (e) {
+                            reject(new Error('解析响应失败: ' + e.message));
+                        }
+                    } else {
+                        reject(new Error(`HTTP ${xhr.status}: ${xhr.responseText.substring(0, 200)}`));
+                    }
+                });
+
+                xhr.addEventListener('error', () => {
+                    reject(new Error('网络错误'));
+                });
+
+                xhr.addEventListener('timeout', () => {
+                    reject(new Error('请求超时'));
+                });
+
+                xhr.open('POST', apiConfig.url);
+                xhr.timeout = 30000; // 30秒超时
+
+                // 设置请求头
+                if (apiConfig.method === 'header') {
+                    xhr.setRequestHeader('X-API-Key', API_KEY);
+                }
+                // 不要设置 Content-Type，让浏览器自动设置（包含 boundary）
+
+                xhr.send(formData);
+            });
+        }
+    </script>
+</body>
+</html>
+
