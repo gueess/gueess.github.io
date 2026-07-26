@@ -1,0 +1,131 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import GalleryBlock from "../../components/GalleryBlock.astro";
+import GalleryTextBlock from "../../components/GalleryTextBlock.astro";
+import Lightbox from "../../components/Lightbox";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import {
+  contentSlug,
+  getPublishedGalleries,
+  type PublishedGallery,
+} from "../../lib/content";
+
+export async function getStaticPaths() {
+  const galleries = import.meta.env.DEV
+    ? await getCollection("galleries")
+    : await getPublishedGalleries();
+
+  return galleries.map((gallery) => ({
+    params: { slug: contentSlug(gallery) },
+    props: { gallery },
+  }));
+}
+
+interface Props {
+  gallery: CollectionEntry<"galleries"> | PublishedGallery;
+}
+
+const { gallery } = Astro.props;
+const publication = gallery.data.publication;
+const hasPublicationHeader = Boolean(
+  publication.title ||
+    publication.summary ||
+    publication.location ||
+    publication.date,
+);
+const { Content } = await render(gallery);
+const photosById = new Map(
+  gallery.data.composition.photos.map((photo) => [photo.id, photo]),
+);
+let imageOffset = 0;
+const sequence = gallery.data.composition.blocks.map((block) => {
+  const blockPhotos =
+    block.type === "images"
+      ? block.photoIds
+          .map((photoId) => photosById.get(photoId))
+          .filter((photo) => photo !== undefined)
+      : [];
+  const startIndex = imageOffset;
+  imageOffset += blockPhotos.length;
+  return { block, photos: blockPhotos, startIndex };
+});
+const photos = sequence.flatMap(({ photos: blockPhotos }) =>
+  blockPhotos.map((photo) => ({
+    src: photo.image.src,
+    alt: photo.alt,
+    caption: photo.caption,
+  })),
+);
+---
+
+<SiteLayout
+  title={publication.title || gallery.data.workingTitle}
+  description={publication.summary}
+  quietHeader
+>
+  <article class="gallery-story">
+    {
+      hasPublicationHeader && (
+        <header class="gallery-story__header">
+          <p class="eyebrow">PHOTO STORY</p>
+          {publication.title && <h1>{publication.title}</h1>}
+          <div class="gallery-story__meta">
+            {publication.summary && <p>{publication.summary}</p>}
+            {(publication.location || publication.date) && (
+              <dl>
+                {publication.location && (
+                  <>
+                    <dt>地点</dt>
+                    <dd>{publication.location}</dd>
+                  </>
+                )}
+                {publication.date && (
+                  <>
+                    <dt>时间</dt>
+                    <dd>
+                      {new Intl.DateTimeFormat("zh-CN", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }).format(publication.date)}
+                    </dd>
+                  </>
+                )}
+              </dl>
+            )}
+          </div>
+          <div class="gallery-story__body prose prose--intro">
+            <Content />
+          </div>
+        </header>
+      )
+    }
+
+    <div class="gallery-story__sequence">
+      {
+        sequence.map(({ block, photos: blockPhotos, startIndex }) =>
+          block.type === "images" ? (
+            <GalleryBlock
+              block={block}
+              photos={blockPhotos}
+              startIndex={startIndex}
+            />
+          ) : block.type === "text" ? (
+            <GalleryTextBlock block={block} />
+          ) : (
+            <div
+              class={`gallery-spacer gallery-sequence-spacing--${block.spacing}`}
+              aria-hidden="true"
+            />
+          ),
+        )
+      }
+    </div>
+
+    <nav class="gallery-story__end" aria-label="相册结束">
+      <p>END OF STORY</p>
+      <a href="/#projects">返回所有作品</a>
+    </nav>
+  </article>
+  <Lightbox photos={photos} client:load />
+</SiteLayout>

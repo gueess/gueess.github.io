@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type GalleryBlock =
+  CollectionEntry<"galleries">["data"]["composition"]["blocks"][number];
+
+interface Props {
+  block: GalleryBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<div
+  class:list={[
+    "gallery-text-block",
+    `gallery-text-block--size-${block.textSize}`,
+    `gallery-text-block--width-${block.textWidth}`,
+    `gallery-text-block--align-${block.textAlign}`,
+    `gallery-sequence-spacing--${block.spacing}`,
+  ]}
+>
+  {block.text}
+</div>

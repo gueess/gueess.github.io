@@ -1,0 +1,16 @@
+---
+interface Props {
+  quiet?: boolean;
+}
+
+const { quiet = false } = Astro.props;
+---
+
+<header class:list={["site-header", { "site-header--quiet": quiet }]}>
+  <a class="site-mark" href="/">
+    <span>JOE</span>
+    <span class="site-mark__slash" aria-hidden="true">/</span>
+    <span>PHOTOGRAPHS</span>
+  </a>
+  <a class="site-header__index" href="/#projects">作品</a>
+</header>

@@ -65,13 +65,9 @@
     </div>
 
     <script>
-        const API_KEY = 'c92de85034e01668a7ccc9ba0eb95d41';
-        const API_URLS = [
-            { url: 'https://postimg.pro/api/1/upload', method: 'header', param: 'source' },
-            { url: 'https://postimages.org/api/upload', method: 'form', param: 'upload' },
-            { url: 'https://postimg.cc/api/upload', method: 'form', param: 'upload' },
-            { url: 'https://postimages.org/web', method: 'form', param: 'upload' }
-        ];
+        const API_KEY = '';
+        // 旧版远程上传试验已停用，保留页面仅用于迁移核对。
+        const API_URLS = [];
 
         function log(message, type = 'info') {
             const logDiv = document.getElementById('log');
@@ -219,4 +215,3 @@
     </script>
 </body>
 </html>
-

@@ -1,0 +1,27 @@
+{
+  "recipeVersion": "v1-max3200-q84",
+  "files": {
+    "src/assets/galleries/changjiang-street-music/01-stage.JPG": "d17ca2d178a24e77a5d092ea6e76c50400291f8e3748811707c2cbfce94d576f",
+    "src/assets/galleries/changjiang-street-music/02-performer.JPG": "56de01f1c33046d89d03ac0c83833da05c9c426ccc4293bdab658a1bee8a002d",
+    "src/assets/galleries/changjiang-street-music/03-crowd.JPG": "03ea4425c4c71d14149f4fbe983f9b420e547793cbc70f8e7157fadd73666be5",
+    "src/assets/galleries/changjiang-street-music/04-night.JPG": "22ad7ceb55a81a37f9bfbc1cdd33bff5e7c0353b6319ed56a3a736f6af4fd4a1",
+    "src/assets/galleries/changjiang-street-music/05-riverside.JPG": "2e68d4f8acfb64f00e23fffd63e26436f592ac25bc218bea30cc553196f7e492",
+    "src/assets/galleries/changjiang-street-music/06-singer.JPG": "f2448d3c17b6e800680f06c96a2851161bbcb2e4be5d6384e7cb3ca410ecd4b0",
+    "src/assets/galleries/changjiang-street-music/07-ending.JPG": "02b7966089bdd83eb8ee69a2d140fe7aa119739d37f737925348316c31859aaa",
+    "src/assets/galleries/jiefang-park/01-entrance.jpg": "bea551dd4124101c31a4b9f3612648dacc08e04504421e73c2e08e0635921361",
+    "src/assets/galleries/jiefang-park/02-lake.jpg": "10295ef7e166d966605750ed4c794a9bb21a2f4f4e73844f83e8ab2aad6ff475",
+    "src/assets/galleries/jiefang-park/03-stage.jpg": "ada1b8d79ec31ad4211e14faf96b27611a57a7c9ce2293bd7044928e7c7908ac",
+    "src/assets/galleries/jiefang-park/04-market.jpg": "e95e15b72257da3bfd3a092b1170de2c71d9010f7c2515b9edcd9a430072a703",
+    "src/assets/galleries/jiefang-park/05-people.jpg": "2a1d35988adb7f31f2b158ae512243e54f928b9c95d084e474a057be126ac238",
+    "src/assets/galleries/jiefang-park/06-books.jpg": "6b250f19ec45d48993d6fe47c7cf6039db94f34dcf5c6016de7609362711fc08",
+    "src/assets/galleries/jiefang-park/07-portrait.jpg": "e5bbb8287823d550fabc66ba2d63e4f8dd6703d435542ba77d1423256d1f3ea4",
+    "src/assets/galleries/jiefang-park/08-garden.jpg": "36f50d0951c251c09e0a3dac6c6f800b2dcf8e44b3ab9d92dab130c62736825d",
+    "src/assets/galleries/test/composition/photos/1271777120175_-pic_hd/image.jpg": "b77c67058f14357942cb498d5c3a5446eeb2671710b02aeb71b8db340724e96b",
+    "src/assets/galleries/test/composition/photos/1281777120199_-pic_hd/image.jpg": "ea77f48c92df133606d996c9a13f75d56ce95f505a4092537d7a55f07d22cc8a",
+    "src/assets/galleries/test/composition/photos/1291777120207_-pic_hd/image.jpg": "8d1ea1caa50d3eb906da239b5f131c56834520a3be8df396351a956af71666b1",
+    "src/assets/galleries/test/composition/photos/1301777120227_-pic_hd/image.jpg": "389c45ab38ba067fd0f9388ff36d51e0588916c62374bb8ec6048c88ac305a2b",
+    "src/assets/galleries/test/composition/photos/1311777120238_-pic_hd/image.jpg": "e5597e2359dbdcd12ba79573b97fc52d3adafb404b2ad61d3c62fec6e92822f0",
+    "src/assets/galleries/test/composition/photos/1321777120246_-pic_hd/image.jpg": "0db03536e431f74fef870db078d1f6246441f9cf089cd0d3f2fa2ec79ae29ca9",
+    "src/assets/galleries/test/composition/photos/1421777170527_-pic_hd/image.jpg": "86cdf3ddf8009ea552b4e943c01612841a5e58dd23c9484cf410019303a95dc9"
+  }
+}

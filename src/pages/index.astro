@@ -1,0 +1,76 @@
+---
+import { Picture } from "astro:assets";
+import GalleryGrid from "../components/GalleryGrid.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import {
+  contentSlug,
+  getPublishedGalleries,
+  getSiteSettings,
+} from "../lib/content";
+
+const galleries = await getPublishedGalleries();
+const settings = await getSiteSettings();
+const [hero, ...projects] = galleries;
+---
+
+<SiteLayout showHeader={false}>
+  {
+    hero ? (
+      <section class="home-hero">
+        <Picture
+          src={hero.data.publication.cover}
+          widths={[720, 1440, 2160]}
+          sizes="100vw"
+          formats={["webp"]}
+          alt={`${hero.data.publication.title}相册封面`}
+          loading="eager"
+        />
+        <div class="home-hero__shade" aria-hidden="true" />
+        <header class="home-hero__header">
+          <a href="/" class="site-mark site-mark--light">
+            <span>JOE</span><span aria-hidden="true">/</span><span>PHOTOGRAPHS</span>
+          </a>
+          <a href="#projects">作品</a>
+        </header>
+        <a
+          class="home-hero__caption"
+          href={`/photos/${contentSlug(hero)}/`}
+        >
+          <span class="eyebrow">FEATURED STORY</span>
+          <h1>{hero.data.publication.title}</h1>
+          <p>
+            {hero.data.publication.location}
+            <span aria-hidden="true"> · </span>
+            {hero.data.publication.date.getFullYear()}
+          </p>
+        </a>
+        <a class="home-hero__scroll" href="#projects">
+          向下浏览
+          <span aria-hidden="true">↓</span>
+        </a>
+      </section>
+    ) : (
+      <section class="empty-state">
+        <p class="eyebrow">JOE / PHOTOGRAPHS</p>
+        <h1>照片正在整理中。</h1>
+      </section>
+    )
+  }
+
+  <section class="projects-section" id="projects">
+    <header class="projects-intro">
+      <p class="eyebrow">SELECTED STORIES</p>
+      <div>
+        <h2>照片是一些<br />留下来的时刻。</h2>
+        <p>{settings.introduction}</p>
+      </div>
+    </header>
+    {projects.length > 0 && <GalleryGrid galleries={projects} />}
+  </section>
+
+  <footer class="site-footer">
+    <p>{settings.siteName}</p>
+    <a href={`mailto:${settings.email}`}>{settings.email}</a>
+    <p>© {new Date().getFullYear()} Joe</p>
+  </footer>
+</SiteLayout>

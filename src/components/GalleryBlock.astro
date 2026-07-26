@@ -1,0 +1,72 @@
+---
+import { Picture } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+type LayoutBlock =
+  CollectionEntry<"galleries">["data"]["composition"]["blocks"][number];
+type GalleryPhoto =
+  CollectionEntry<"galleries">["data"]["composition"]["photos"][number];
+
+interface Props {
+  block: LayoutBlock;
+  photos: GalleryPhoto[];
+  startIndex: number;
+}
+
+const { block, photos, startIndex } = Astro.props;
+const expectedCount = {
+  single: 1,
+  pair: 2,
+  triptych: 3,
+}[block.layout];
+const images = photos.slice(0, expectedCount);
+const sizes = {
+  single:
+    block.width === "contained"
+      ? "(max-width: 760px) 100vw, min(72vw, 1200px)"
+      : "(max-width: 760px) 100vw, min(96vw, 1920px)",
+  pair: "(max-width: 760px) 100vw, min(48vw, 960px)",
+  triptych: "(max-width: 760px) 100vw, min(32vw, 720px)",
+}[block.layout];
+const widths = {
+  single: [720, 1280, 1920, 2400],
+  pair: [640, 960, 1280, 1600],
+  triptych: [480, 720, 960, 1280],
+}[block.layout];
+---
+
+<section
+  class:list={[
+    "gallery-block",
+    `gallery-block--${block.layout}`,
+    `gallery-block--${block.variant}`,
+    `gallery-block--width-${block.width}`,
+    `gallery-block--gap-${block.gap}`,
+    `gallery-block--aspect-${block.aspect}`,
+  ]}
+>
+  {
+    images.map((photo, index) => (
+      <figure class="gallery-photo">
+        <button
+          class="gallery-photo__button"
+          type="button"
+          data-lightbox-trigger
+          data-lightbox-index={startIndex + index}
+          aria-label={`查看大图：${photo.alt}`}
+          style={`--focus-x: ${photo.focusX}%; --focus-y: ${photo.focusY}%`}
+        >
+          <Picture
+            src={photo.image}
+            widths={widths}
+            sizes={sizes}
+            formats={["webp"]}
+            alt={photo.alt}
+            loading="lazy"
+          />
+        </button>
+        {photo.caption && <figcaption>{photo.caption}</figcaption>}
+      </figure>
+    ))
+  }
+</section>

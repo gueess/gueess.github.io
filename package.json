@@ -1,0 +1,38 @@
+{
+  "name": "joe-photographs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "studio": "ASTRO_TELEMETRY_DISABLED=1 astro dev --open /keystatic/",
+    "check": "ASTRO_TELEMETRY_DISABLED=1 SKIP_KEYSTATIC=true astro check",
+    "validate:content": "node scripts/validate-content.mjs",
+    "build": "npm run validate:content && ASTRO_TELEMETRY_DISABLED=1 SKIP_KEYSTATIC=true astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "media:prepare": "node scripts/prepare-media.mjs",
+    "publish": "node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "latest",
+    "@astrojs/react": "latest",
+    "@keystatic/astro": "latest",
+    "@keystatic/core": "latest",
+    "astro": "latest",
+    "gray-matter": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "sharp": "latest",
+    "yaml": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  },
+  "overrides": {
+    "brace-expansion": "5.0.8",
+    "minimatch": "10.2.5"
+  }
+}

@@ -1,16 +1,11 @@
 // 配置
 const CONFIG = {
     // Postimg.cc API Key（如果后端代理可用）
-    POSTIMG_API_KEY: 'c92de85034e01668a7ccc9ba0eb95d41',
-    // 使用 sm.ms API（免费，支持 CORS，无需 API Key）
-    USE_SM_MS: true,
-    SM_MS_API_URL: 'https://sm.ms/api/v2/upload',
-    // Postimg.cc API 端点（需要后端代理才能使用）
-    POSTIMG_API_URLS: [
-        'https://postimg.pro/api/1/upload',
-        'https://postimages.org/api/upload',
-        'https://postimg.cc/api/upload'
-    ],
+    POSTIMG_API_KEY: '',
+    // 旧版远程上传已停用；新站只使用 Keystatic 写入本地图片。
+    USE_SM_MS: false,
+    SM_MS_API_URL: '',
+    POSTIMG_API_URLS: [],
     CONFIG_FILE: 'admin-config.json'
 };
 
@@ -589,6 +584,9 @@ function handleDrop(e) {
 }
 
 // ==================== 预览功能 ====================
+// 保存当前的预览 blob URL，用于内存管理
+let currentPreviewUrl = null;
+
 function initPreview() {
     const titleInput = document.getElementById('album-title-input');
     const filenameInput = document.getElementById('album-filename-input');
@@ -605,7 +603,13 @@ function initPreview() {
 
 function renderPreview() {
     const previewContainer = document.getElementById('preview-container');
-    
+
+    // 撤销之前的 blob URL，防止内存泄漏
+    if (currentPreviewUrl) {
+        URL.revokeObjectURL(currentPreviewUrl);
+        currentPreviewUrl = null;
+    }
+
     if (state.currentAlbum.layout.length === 0) {
         previewContainer.innerHTML = '<p class="empty-message">添加照片后预览效果</p>';
         return;
@@ -617,12 +621,28 @@ function renderPreview() {
     // 创建 blob URL
     const blob = new Blob([previewHTML], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
+    currentPreviewUrl = url; // 保存 URL 以便下次撤销
     
     previewContainer.innerHTML = `<iframe src="${url}"></iframe>`;
 }
 
+// HTML 转义函数，防止 XSS 攻击
+function escapeHtml(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 function generatePreviewHTML() {
     const title = state.currentAlbum.title || '相册';
+    // HTML 转义 title，防止 XSS 攻击
+    const escapedTitle = escapeHtml(title);
     
     let layoutHTML = '';
     
@@ -663,7 +683,7 @@ function generatePreviewHTML() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title}</title>
+    <title>${escapedTitle}</title>
     <style>
         body, html {
             margin: 0;
@@ -737,7 +757,7 @@ function generatePreviewHTML() {
 <body>
     <div class="gallery-container" id="gallery-container">
         <div class="header" id="header">
-            <h1>${title}</h1>
+            <h1>${escapedTitle}</h1>
         </div>
         <div class="gallery">
             ${layoutHTML}
@@ -849,4 +869,3 @@ function publishPage() {
     
     alert(`页面已生成并下载：${filename}\n\n请将文件上传到 GitHub 仓库。`);
 }
-

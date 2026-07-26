@@ -1,0 +1,36 @@
+---
+import SiteLayout from "./SiteLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  date: Date;
+  noindex?: boolean;
+}
+
+const { title, description, date, noindex = true } = Astro.props;
+---
+
+<SiteLayout
+  title={title}
+  description={description}
+  noindex={noindex}
+  quietHeader
+>
+  <article class="article-shell">
+    <header class="article-header">
+      <p class="eyebrow">WRITING / UNLISTED</p>
+      <h1>{title}</h1>
+      <time datetime={date.toISOString()}>
+        {new Intl.DateTimeFormat("zh-CN", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(date)}
+      </time>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</SiteLayout>

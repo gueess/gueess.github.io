@@ -1,0 +1,49 @@
+---
+import { Picture } from "astro:assets";
+import { contentSlug, type PublishedGallery } from "../lib/content";
+
+interface Props {
+  galleries: PublishedGallery[];
+}
+
+const { galleries } = Astro.props;
+---
+
+<div class="project-grid">
+  {
+    galleries.map((gallery, index) => (
+      <article
+        class:list={[
+          "project-card",
+          { "project-card--wide": index % 5 === 0 },
+        ]}
+      >
+        <a href={`/photos/${contentSlug(gallery)}/`}>
+          <div class="project-card__image">
+            <Picture
+              src={gallery.data.publication.cover}
+              widths={[480, 960, 1440]}
+              sizes={
+                index % 5 === 0
+                  ? "(max-width: 760px) 100vw, 66vw"
+                  : "(max-width: 760px) 100vw, 45vw"
+              }
+              formats={["webp"]}
+              alt={`${gallery.data.publication.title}相册封面`}
+              loading="lazy"
+            />
+          </div>
+          <div class="project-card__meta">
+            <h2>{gallery.data.publication.title}</h2>
+            <p>
+              <span>{gallery.data.publication.location}</span>
+              <time datetime={gallery.data.publication.date.toISOString()}>
+                {gallery.data.publication.date.getFullYear()}
+              </time>
+            </p>
+          </div>
+        </a>
+      </article>
+    ))
+  }
+</div>
