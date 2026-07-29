@@ -52,15 +52,27 @@ composition:
       focusY: 50
   blocks:
     - type: images
-      layout: triptych
+      layout: single
       photoIds:
         - entrance
+      variant: equal
+      width: contained
+      gap: normal
+      aspect: natural
+      text: ""
+      textSize: medium
+      textWidth: medium
+      textAlign: left
+      spacing: medium
+    - type: images
+      layout: pair
+      photoIds:
         - lake
         - stage
       variant: equal
       width: wide
       gap: normal
-      aspect: landscape
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium
@@ -74,7 +86,7 @@ composition:
       variant: equal
       width: wide
       gap: normal
-      aspect: landscape
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium
@@ -98,10 +110,10 @@ composition:
       photoIds:
         - portrait
         - garden
-      variant: equal
+      variant: lead-left
       width: wide
-      gap: normal
-      aspect: landscape
+      gap: wide
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium

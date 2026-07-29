@@ -15,7 +15,12 @@ const { galleries } = Astro.props;
       <article
         class:list={[
           "project-card",
-          { "project-card--wide": index % 5 === 0 },
+          {
+            "project-card--reverse": index % 2 === 1,
+            "project-card--portrait":
+              gallery.data.publication.cover.height >
+              gallery.data.publication.cover.width,
+          },
         ]}
       >
         <a href={`/photos/${contentSlug(gallery)}/`}>
@@ -23,24 +28,29 @@ const { galleries } = Astro.props;
             <Picture
               src={gallery.data.publication.cover}
               widths={[480, 960, 1440]}
-              sizes={
-                index % 5 === 0
-                  ? "(max-width: 760px) 100vw, 66vw"
-                  : "(max-width: 760px) 100vw, 45vw"
-              }
+              sizes="(max-width: 760px) 100vw, 58vw"
               formats={["webp"]}
               alt={`${gallery.data.publication.title}相册封面`}
               loading="lazy"
             />
           </div>
           <div class="project-card__meta">
-            <h2>{gallery.data.publication.title}</h2>
-            <p>
+            <span class="project-card__number">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h2>{gallery.data.publication.title}</h2>
+              <p class="project-card__summary">
+                {gallery.data.publication.summary}
+              </p>
+            </div>
+            <p class="project-card__details">
               <span>{gallery.data.publication.location}</span>
               <time datetime={gallery.data.publication.date.toISOString()}>
                 {gallery.data.publication.date.getFullYear()}
               </time>
             </p>
+            <span class="project-card__link">查看故事 <span aria-hidden="true">↗</span></span>
           </div>
         </a>
       </article>

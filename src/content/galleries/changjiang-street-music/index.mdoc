@@ -46,15 +46,40 @@ composition:
       focusY: 50
   blocks:
     - type: images
-      layout: triptych
+      layout: single
       photoIds:
         - stage
+      variant: equal
+      width: contained
+      gap: normal
+      aspect: natural
+      text: ""
+      textSize: medium
+      textWidth: medium
+      textAlign: left
+      spacing: medium
+    - type: images
+      layout: pair
+      photoIds:
         - performer
         - crowd
       variant: equal
       width: wide
       gap: normal
-      aspect: landscape
+      aspect: natural
+      text: ""
+      textSize: medium
+      textWidth: medium
+      textAlign: left
+      spacing: medium
+    - type: images
+      layout: single
+      photoIds:
+        - night
+      variant: equal
+      width: full
+      gap: normal
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium
@@ -63,26 +88,25 @@ composition:
     - type: images
       layout: pair
       photoIds:
-        - night
         - riverside
+        - singer
       variant: equal
       width: wide
       gap: normal
-      aspect: landscape
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium
       textAlign: left
       spacing: medium
     - type: images
-      layout: pair
+      layout: single
       photoIds:
-        - singer
         - ending
       variant: equal
       width: wide
       gap: normal
-      aspect: landscape
+      aspect: natural
       text: ""
       textSize: medium
       textWidth: medium

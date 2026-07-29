@@ -65,7 +65,10 @@ const widths = {
             loading="lazy"
           />
         </button>
-        {photo.caption && <figcaption>{photo.caption}</figcaption>}
+        <figcaption>
+          <span>{String(startIndex + index + 1).padStart(2, "0")}</span>
+          {photo.caption && <span>{photo.caption}</span>}
+        </figcaption>
       </figure>
     ))
   }
