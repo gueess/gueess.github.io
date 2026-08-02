@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>解放公园</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+        #gallery-container {
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 60px;
+        }
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .top-image {
+            width: 32%;
+            height: 0;
+            padding-bottom: 48%;
+            background-color: #dddddd;
+            background-size: cover;
+            background-position: center;
+        }
+        .bottom-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .bottom-image {
+            width: 49%;
+            height: 0;
+            padding-bottom: 32.67%;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 20px;
+        }
+        .single-photo-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .single-photo {
+            width: 100%;
+            height: 0;
+            padding-bottom: 66.67%;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            background: #333;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            padding: 5px 0;
+            z-index: 1;
+            transition: top 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container" id="gallery-container">
+        <div class="header" id="header">
+            <h1>解放公园</h1>
+        </div>
+        <div class="gallery">
+        <div class="single-photo-container"><div class="single-photo" style="background-image: url('https://i.postimg.cc/fLgmRgw3/MG-9784.jpg');"></div></div>
+<div class="top-row">
+            <div class="top-image" style="background-image: url('https://i.postimg.cc/y6kGBDBN/MG-9834.jpg');"></div>
+            <div class="top-image" style="background-image: url('https://i.postimg.cc/XX6ZrRtB/MG-9831.jpg');"></div>
+            <div class="top-image" style="background-image: url('https://i.postimg.cc/05FBN92m/MG-9835.jpg');"></div>
+        </div>
+<div class="bottom-images">
+            <div class="bottom-image" style="background-image: url('https://i.postimg.cc/BbKLQSYp/MG-9824.jpg');"></div>
+            <div class="bottom-image" style="background-image: url('https://i.postimg.cc/25kZFfyN/MG-9819.jpg');"></div>
+        </div>
+        </div>
+    </div>
+    <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById('header');
+        const galleryContainer = document.getElementById('gallery-container');
+        const headerHeight = header.offsetHeight;
+
+        galleryContainer.addEventListener('scroll', () => {
+            const scrollTop = galleryContainer.scrollTop;
+            if (scrollTop > lastScrollTop) {
+                header.style.top = '-120px';
+                if (scrollTop <= 0) {
+                    header.style.top = '0';
+                }
+            }
+            else if(scrollTop < lastScrollTop){
+                header.style.top = '-120px';
+                if (scrollTop + galleryContainer.clientHeight + headerHeight >= galleryContainer.scrollHeight) {
+                    header.style.top = '0';
+                }
+                if (scrollTop <= 0) {
+                    header.style.top = '0';
+                }
+            }
+            lastScrollTop = scrollTop;
+        });
+    </script>
+</body>
+</html>
