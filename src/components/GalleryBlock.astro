@@ -11,9 +11,10 @@ interface Props {
   block: LayoutBlock;
   photos: GalleryPhoto[];
   startIndex: number;
+  priority?: boolean;
 }
 
-const { block, photos, startIndex } = Astro.props;
+const { block, photos, startIndex, priority = false } = Astro.props;
 const expectedCount = {
   single: 1,
   pair: 2,
@@ -62,7 +63,8 @@ const widths = {
             sizes={sizes}
             formats={["webp"]}
             alt={photo.alt}
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            fetchpriority={priority ? "high" : "auto"}
           />
         </button>
         <figcaption>

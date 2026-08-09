@@ -10,52 +10,44 @@ import {
 
 const galleries = await getPublishedGalleries();
 const settings = await getSiteSettings();
-const [hero] = galleries;
+const [hero, ...projects] = galleries;
 ---
 
 <SiteLayout showHeader={false}>
   {
     hero ? (
       <section class="home-hero">
+        <Picture
+          src={hero.data.publication.cover}
+          widths={[720, 1440, 2160]}
+          sizes="100vw"
+          formats={["webp"]}
+          alt={`${hero.data.publication.title}相册封面`}
+          loading="eager"
+        />
+        <div class="home-hero__shade" aria-hidden="true" />
         <header class="home-hero__header">
           <a href="/" class="site-mark site-mark--light">
             <span>JOE</span><span aria-hidden="true">/</span><span>PHOTOGRAPHS</span>
           </a>
           <a href="#projects">作品</a>
         </header>
-        <div class="home-hero__body">
-          <a
-            class="home-hero__caption"
-            href={`/photos/${contentSlug(hero)}/`}
-          >
-            <span class="eyebrow">FEATURED STORY</span>
-            <h1>{hero.data.publication.title}</h1>
-            <p>{hero.data.publication.summary}</p>
-            <span class="home-hero__details">
-              {hero.data.publication.location}
-              <span aria-hidden="true"> · </span>
-              {hero.data.publication.date.getFullYear()}
-            </span>
-          </a>
-          <a
-            class="home-hero__media"
-            href={`/photos/${contentSlug(hero)}/`}
-            aria-label={`打开相册：${hero.data.publication.title}`}
-          >
-            <Picture
-              src={hero.data.publication.cover}
-              widths={[720, 1200, 1800]}
-              sizes="(max-width: 760px) 100vw, 48vw"
-              formats={["webp"]}
-              alt={`${hero.data.publication.title}相册封面`}
-              loading="eager"
-            />
-          </a>
-        </div>
-        <div class="home-hero__footer">
-          <span>{String(galleries.length).padStart(2, "0")} STORIES</span>
-          <a href="#projects">向下浏览 <span aria-hidden="true">↓</span></a>
-        </div>
+        <a
+          class="home-hero__caption"
+          href={`/photos/${contentSlug(hero)}/`}
+        >
+          <span class="eyebrow">FEATURED STORY</span>
+          <h1>{hero.data.publication.title}</h1>
+          <p>
+            {hero.data.publication.location}
+            <span aria-hidden="true"> · </span>
+            {hero.data.publication.date.getFullYear()}
+          </p>
+        </a>
+        <a class="home-hero__scroll" href="#projects">
+          向下浏览
+          <span aria-hidden="true">↓</span>
+        </a>
       </section>
     ) : (
       <section class="empty-state">
@@ -73,7 +65,7 @@ const [hero] = galleries;
         <p>{settings.introduction}</p>
       </div>
     </header>
-    {galleries.length > 0 && <GalleryGrid galleries={galleries} />}
+    {projects.length > 0 && <GalleryGrid galleries={projects} />}
   </section>
 
   <footer class="site-footer">
