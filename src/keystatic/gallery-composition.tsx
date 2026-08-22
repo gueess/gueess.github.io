@@ -65,11 +65,20 @@ const contentBlockField = fields.object(
         { label: "一张", value: "single" },
         { label: "两张", value: "pair" },
         { label: "三张", value: "triptych" },
+        { label: "自由拼贴", value: "collage" },
       ],
       defaultValue: "single",
     }),
     photoIds: fields.array(fields.text({ label: "照片 ID" }), {
       label: "区块照片",
+    }),
+    collageStyle: fields.select({
+      label: "拼贴方式",
+      options: [
+        { label: "屋檐与横线", value: "roof" },
+        { label: "标记与远景", value: "markers" },
+      ],
+      defaultValue: "roof",
     }),
     variant: fields.select({
       label: "尺寸关系",

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import GalleryBlock from "../../components/GalleryBlock.astro";
+import GalleryCollage from "../../components/GalleryCollage.astro";
 import GalleryTextBlock from "../../components/GalleryTextBlock.astro";
 import Lightbox from "../../components/Lightbox";
 import SiteLayout from "../../layouts/SiteLayout.astro";
@@ -125,7 +126,13 @@ const photos = sequence.flatMap(({ photos: blockPhotos }) =>
     <div class="gallery-story__sequence">
       {
         storySequence.map(({ block, photos: blockPhotos, startIndex }) =>
-          block.type === "images" ? (
+          block.type === "images" && block.layout === "collage" ? (
+            <GalleryCollage
+              block={block}
+              photos={blockPhotos}
+              startIndex={startIndex}
+            />
+          ) : block.type === "images" ? (
             <GalleryBlock
               block={block}
               photos={blockPhotos}

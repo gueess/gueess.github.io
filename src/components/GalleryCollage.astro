@@ -1,0 +1,70 @@
+---
+import { Picture } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+type LayoutBlock =
+  CollectionEntry<"galleries">["data"]["composition"]["blocks"][number];
+type GalleryPhoto =
+  CollectionEntry<"galleries">["data"]["composition"]["photos"][number];
+
+interface Props {
+  block: LayoutBlock;
+  photos: GalleryPhoto[];
+  startIndex: number;
+}
+
+const { block, photos, startIndex } = Astro.props;
+const placements = {
+  roof: [
+    [2, 7, 36],
+    [41, 0, 37],
+    [76, 2, 20],
+    [4, 43, 20],
+    [33, 53, 32],
+    [68, 55, 30],
+  ],
+  markers: [
+    [0, 0, 22],
+    [37, 0, 22],
+    [74, 0, 22],
+    [0, 40, 20],
+    [30, 37, 34],
+    [71, 39, 20],
+    [31, 70, 35],
+  ],
+} as const;
+const style = block.collageStyle;
+const positions = placements[style];
+---
+
+<section class={`gallery-collage gallery-collage--${style}`}>
+  {
+    photos.map((photo, index) => {
+      const [x, y, width] = positions[index] ?? [0, index * 12, 30];
+      return (
+        <figure
+          class="gallery-photo"
+          style={`--collage-x: ${x}%; --collage-y: ${y}%; --collage-width: ${width}%;`}
+        >
+          <button
+            class="gallery-photo__button"
+            type="button"
+            data-lightbox-trigger
+            data-lightbox-index={startIndex + index}
+            aria-label={`查看大图：${photo.alt}`}
+          >
+            <Picture
+              src={photo.image}
+              widths={[480, 720, 960, 1280]}
+              sizes="(max-width: 760px) 48vw, 34vw"
+              formats={["webp"]}
+              alt={photo.alt}
+              loading="lazy"
+            />
+          </button>
+          <figcaption aria-hidden="true"></figcaption>
+        </figure>
+      );
+    })
+  }
+</section>
