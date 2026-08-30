@@ -23,7 +23,17 @@ const galleries = defineCollection({
         .enum(["single", "pair", "triptych", "collage"])
         .default("single"),
       photoIds: z.array(z.string()).default([]),
-      collageStyle: z.enum(["roof", "markers"]).default("roof"),
+      collageStyle: z
+        .enum([
+          "roof",
+          "markers",
+          "shanxi-eaves",
+          "shanxi-hall",
+          "shanxi-thresholds",
+          "shanxi-grottoes",
+          "shanxi-passage",
+        ])
+        .default("roof"),
       variant: z.enum(["equal", "lead-left", "lead-right"]).default("equal"),
       width: z.enum(["contained", "wide", "full"]).default("wide"),
       gap: z.enum(["tight", "normal", "wide"]).default("normal"),

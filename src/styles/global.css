@@ -511,6 +511,20 @@ textarea {
   aspect-ratio: 1.08;
 }
 
+.gallery-collage--shanxi-eaves {
+  aspect-ratio: 1.15;
+}
+
+.gallery-collage--shanxi-hall,
+.gallery-collage--shanxi-thresholds,
+.gallery-collage--shanxi-grottoes {
+  aspect-ratio: 0.8;
+}
+
+.gallery-collage--shanxi-passage {
+  aspect-ratio: 0.45;
+}
+
 .gallery-collage .gallery-photo {
   position: absolute;
   top: var(--collage-y);
@@ -977,7 +991,12 @@ textarea {
 
   .gallery-collage,
   .gallery-collage--roof,
-  .gallery-collage--markers {
+  .gallery-collage--markers,
+  .gallery-collage--shanxi-eaves,
+  .gallery-collage--shanxi-hall,
+  .gallery-collage--shanxi-thresholds,
+  .gallery-collage--shanxi-grottoes,
+  .gallery-collage--shanxi-passage {
     display: grid;
     width: 100%;
     aspect-ratio: auto;

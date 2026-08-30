@@ -50,14 +50,14 @@ const sequence = gallery.data.composition.blocks.map((block) => {
   imageOffset += blockPhotos.length;
   return { block, photos: blockPhotos, startIndex };
 });
-const leadIndex = sequence.findIndex(
-  ({ block, photos: blockPhotos }) =>
-    block.type === "images" &&
-    block.layout === "single" &&
-    blockPhotos.length === 1,
-);
-const lead = leadIndex >= 0 ? sequence[leadIndex] : undefined;
-const storySequence = sequence.filter((_, index) => index !== leadIndex);
+const firstSequence = sequence[0];
+const lead =
+  firstSequence?.block.type === "images" &&
+  firstSequence.block.layout === "single" &&
+  firstSequence.photos.length === 1
+    ? firstSequence
+    : undefined;
+const storySequence = lead ? sequence.slice(1) : sequence;
 const photos = sequence.flatMap(({ photos: blockPhotos }) =>
   blockPhotos.map((photo) => ({
     src: photo.image.src,

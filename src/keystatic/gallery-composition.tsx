@@ -77,6 +77,11 @@ const contentBlockField = fields.object(
       options: [
         { label: "屋檐与横线", value: "roof" },
         { label: "标记与远景", value: "markers" },
+        { label: "山西 · 屋檐", value: "shanxi-eaves" },
+        { label: "山西 · 殿内", value: "shanxi-hall" },
+        { label: "山西 · 门与殿", value: "shanxi-thresholds" },
+        { label: "山西 · 石窟", value: "shanxi-grottoes" },
+        { label: "山西 · 路途", value: "shanxi-passage" },
       ],
       defaultValue: "roof",
     }),
