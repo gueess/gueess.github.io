@@ -32,6 +32,11 @@ const galleries = defineCollection({
           "shanxi-thresholds",
           "shanxi-grottoes",
           "shanxi-passage",
+          "shanxi-eaves-full",
+          "shanxi-hall-full",
+          "shanxi-thresholds-full",
+          "shanxi-grottoes-full",
+          "shanxi-passage-full",
         ])
         .default("roof"),
       variant: z.enum(["equal", "lead-left", "lead-right"]).default("equal"),

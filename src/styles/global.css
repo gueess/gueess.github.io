@@ -525,6 +525,26 @@ textarea {
   aspect-ratio: 0.45;
 }
 
+.gallery-collage--shanxi-eaves-full {
+  aspect-ratio: 0.8;
+}
+
+.gallery-collage--shanxi-hall-full {
+  aspect-ratio: 0.7;
+}
+
+.gallery-collage--shanxi-thresholds-full {
+  aspect-ratio: 0.6;
+}
+
+.gallery-collage--shanxi-grottoes-full {
+  aspect-ratio: 0.85;
+}
+
+.gallery-collage--shanxi-passage-full {
+  aspect-ratio: 0.46;
+}
+
 .gallery-collage .gallery-photo {
   position: absolute;
   top: var(--collage-y);
@@ -1024,6 +1044,36 @@ textarea {
     aspect-ratio: var(--shanxi-canvas-ratio);
   }
 
+  .gallery-collage--shanxi-eaves-full,
+  .gallery-collage--shanxi-hall-full,
+  .gallery-collage--shanxi-thresholds-full,
+  .gallery-collage--shanxi-grottoes-full,
+  .gallery-collage--shanxi-passage-full {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--shanxi-full-canvas-ratio);
+  }
+
+  .gallery-collage--shanxi-eaves-full {
+    --shanxi-full-canvas-ratio: 0.8;
+  }
+
+  .gallery-collage--shanxi-hall-full {
+    --shanxi-full-canvas-ratio: 0.7;
+  }
+
+  .gallery-collage--shanxi-thresholds-full {
+    --shanxi-full-canvas-ratio: 0.6;
+  }
+
+  .gallery-collage--shanxi-grottoes-full {
+    --shanxi-full-canvas-ratio: 0.85;
+  }
+
+  .gallery-collage--shanxi-passage-full {
+    --shanxi-full-canvas-ratio: 0.46;
+  }
+
   .gallery-collage--shanxi-eaves {
     --shanxi-canvas-ratio: 1.15;
   }
@@ -1049,11 +1099,33 @@ textarea {
     width: var(--collage-width);
   }
 
+  .gallery-collage--shanxi-eaves-full .gallery-photo,
+  .gallery-collage--shanxi-hall-full .gallery-photo,
+  .gallery-collage--shanxi-thresholds-full .gallery-photo,
+  .gallery-collage--shanxi-grottoes-full .gallery-photo,
+  .gallery-collage--shanxi-passage-full .gallery-photo {
+    position: absolute;
+    top: var(--collage-y);
+    left: var(--collage-x);
+    width: var(--collage-width);
+  }
+
   .gallery-collage--shanxi-eaves .gallery-photo figcaption,
   .gallery-collage--shanxi-hall .gallery-photo figcaption,
   .gallery-collage--shanxi-thresholds .gallery-photo figcaption,
   .gallery-collage--shanxi-grottoes .gallery-photo figcaption,
   .gallery-collage--shanxi-passage .gallery-photo figcaption {
+    min-height: 0.45rem;
+    margin-top: 0.15rem;
+    padding-top: 0.14rem;
+    font-size: 0.38rem;
+  }
+
+  .gallery-collage--shanxi-eaves-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-hall-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-thresholds-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-grottoes-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-passage-full .gallery-photo figcaption {
     min-height: 0.45rem;
     margin-top: 0.15rem;
     padding-top: 0.14rem;
