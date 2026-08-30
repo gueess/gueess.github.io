@@ -1,5 +1,5 @@
 ---
-workingTitle: 山西 · 草稿 05 · 紧凑的对应
+workingTitle: 山西 · 草稿 05 · 标准画册编排
 composition:
   photos:
     - { id: entry-sign, image: "@assets/galleries/shanxi-study/_MG_0900.jpg", alt: 寺门牌匾与屋檐 }
@@ -51,11 +51,28 @@ composition:
     - { id: pond-reflection, image: "@assets/galleries/shanxi-study/_MG_1421.jpg", alt: 水池中倒映的树枝与游鱼 }
     - { id: mountain-cloud, image: "@assets/galleries/shanxi-study/_MG_1252.jpg", alt: 云层下的山脊 }
   blocks:
-    - { type: images, layout: collage, collageStyle: shanxi-eaves-full, photoIds: [entry-sign, roof-beasts, roof-branch, roof-trees, brackets-wide, brackets-corner, tree-eaves, facade-trees, eaves-up, hall-signs], width: full, spacing: large }
-    - { type: images, layout: collage, collageStyle: shanxi-hall-full, photoIds: [statues-row, statues-crowd, buddha-hall, buddha-viewer, stone-lion, buddha-offering, watching-statue, buddha-crowd], width: full, spacing: large }
-    - { type: images, layout: collage, collageStyle: shanxi-thresholds-full, photoIds: [window-figure, wall-mural, night-eaves, doorway-figure, altar, facade-visitor, guardian-close, red-pillars, guardian-door, guardian-foreground, guardian-gate], width: full, spacing: large }
-    - { type: images, layout: collage, collageStyle: shanxi-grottoes-full, photoIds: [grotto-crowd, grotto-dark, grotto-mural, grotto-outside, grotto-cliff], width: full, spacing: large }
-    - { type: images, layout: collage, collageStyle: shanxi-passage-full, photoIds: [stone-pagoda, indoor-pagoda, locked-door, door-detail, car-journey, road-cloud, stone-column, scaffold, temple-entry, people-table, tree-trunk, tree-wide, pond-reflection, mountain-cloud], width: full, spacing: large }
+    - { type: images, layout: triptych, photoIds: [entry-sign, roof-beasts, roof-branch], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: triptych, photoIds: [roof-trees, brackets-wide, brackets-corner], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: triptych, photoIds: [tree-eaves, facade-trees, eaves-up], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: single, photoIds: [hall-signs], width: contained, aspect: natural, spacing: large }
+    - { type: images, layout: pair, photoIds: [statues-row, statues-crowd], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [buddha-hall, buddha-viewer], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [stone-lion, buddha-offering], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, variant: lead-right, photoIds: [watching-statue, buddha-crowd], width: wide, aspect: natural, spacing: large }
+    - { type: images, layout: triptych, photoIds: [window-figure, night-eaves, wall-mural], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: triptych, photoIds: [doorway-figure, altar, facade-visitor], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: triptych, photoIds: [guardian-close, red-pillars, guardian-door], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [guardian-foreground, guardian-gate], width: contained, aspect: natural, spacing: large }
+    - { type: images, layout: pair, photoIds: [grotto-crowd, grotto-dark], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: single, photoIds: [grotto-mural], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [grotto-outside, grotto-cliff], width: wide, aspect: natural, spacing: large }
+    - { type: images, layout: pair, photoIds: [stone-pagoda, indoor-pagoda], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [locked-door, door-detail], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, variant: lead-right, photoIds: [car-journey, road-cloud], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [stone-column, scaffold], width: contained, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, variant: lead-right, photoIds: [temple-entry, people-table], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, variant: lead-right, photoIds: [tree-trunk, tree-wide], width: wide, aspect: natural, spacing: medium }
+    - { type: images, layout: pair, photoIds: [pond-reflection, mountain-cloud], width: wide, aspect: natural, spacing: large }
 publication:
   title: 山西 · 观看练习
   date: 2026-08-30
