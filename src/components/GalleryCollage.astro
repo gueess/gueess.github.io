@@ -33,16 +33,16 @@ const placements = {
     [31, 70, 35],
   ],
   "shanxi-eaves": [
-    [12, 4, 13],
-    [36, 10, 19],
-    [60, 6, 16],
-    [8, 36, 23],
-    [38, 36, 22],
-    [64, 32, 12],
-    [10, 62, 13],
-    [35, 58, 20],
-    [63, 65, 12],
-    [36, 76, 18],
+    [16, 5, 12],
+    [36, 10, 17.5],
+    [59, 6, 15.5],
+    [13, 36, 17],
+    [38.5, 37, 17],
+    [63, 32, 11.5],
+    [15, 62, 11.5],
+    [35, 58, 17],
+    [60.5, 65, 11.5],
+    [36, 76, 17],
   ],
   "shanxi-hall": [
     [14, 3, 26],
@@ -117,10 +117,14 @@ const positions = placements[style];
               sizes="(max-width: 760px) 48vw, 34vw"
               formats={["webp"]}
               alt={photo.alt}
-              loading="lazy"
+              loading="eager"
+              fetchpriority={index === 0 ? "high" : "auto"}
             />
           </button>
-          <figcaption aria-hidden="true"></figcaption>
+          <figcaption>
+            <span>{String(startIndex + index + 1).padStart(2, "0")}</span>
+            {photo.caption && <span>{photo.caption}</span>}
+          </figcaption>
         </figure>
       );
     })

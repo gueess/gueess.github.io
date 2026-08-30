@@ -545,7 +545,15 @@ textarea {
 }
 
 .gallery-collage .gallery-photo figcaption {
-  display: none;
+  display: flex;
+  min-height: 1rem;
+  margin-top: 0.35rem;
+  padding-top: 0.28rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
 }
 
 .gallery-photo {
@@ -991,12 +999,7 @@ textarea {
 
   .gallery-collage,
   .gallery-collage--roof,
-  .gallery-collage--markers,
-  .gallery-collage--shanxi-eaves,
-  .gallery-collage--shanxi-hall,
-  .gallery-collage--shanxi-thresholds,
-  .gallery-collage--shanxi-grottoes,
-  .gallery-collage--shanxi-passage {
+  .gallery-collage--markers {
     display: grid;
     width: 100%;
     aspect-ratio: auto;
@@ -1007,6 +1010,54 @@ textarea {
   .gallery-collage .gallery-photo {
     position: static;
     width: auto;
+  }
+
+  /* 草稿 03 的手机端不是重新排列，而是把同一张画布等比例缩小。
+     这样编号、位置和观看顺序会和桌面端保持一致。 */
+  .gallery-collage--shanxi-eaves,
+  .gallery-collage--shanxi-hall,
+  .gallery-collage--shanxi-thresholds,
+  .gallery-collage--shanxi-grottoes,
+  .gallery-collage--shanxi-passage {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--shanxi-canvas-ratio);
+  }
+
+  .gallery-collage--shanxi-eaves {
+    --shanxi-canvas-ratio: 1.15;
+  }
+
+  .gallery-collage--shanxi-hall,
+  .gallery-collage--shanxi-thresholds,
+  .gallery-collage--shanxi-grottoes {
+    --shanxi-canvas-ratio: 0.8;
+  }
+
+  .gallery-collage--shanxi-passage {
+    --shanxi-canvas-ratio: 0.45;
+  }
+
+  .gallery-collage--shanxi-eaves .gallery-photo,
+  .gallery-collage--shanxi-hall .gallery-photo,
+  .gallery-collage--shanxi-thresholds .gallery-photo,
+  .gallery-collage--shanxi-grottoes .gallery-photo,
+  .gallery-collage--shanxi-passage .gallery-photo {
+    position: absolute;
+    top: var(--collage-y);
+    left: var(--collage-x);
+    width: var(--collage-width);
+  }
+
+  .gallery-collage--shanxi-eaves .gallery-photo figcaption,
+  .gallery-collage--shanxi-hall .gallery-photo figcaption,
+  .gallery-collage--shanxi-thresholds .gallery-photo figcaption,
+  .gallery-collage--shanxi-grottoes .gallery-photo figcaption,
+  .gallery-collage--shanxi-passage .gallery-photo figcaption {
+    min-height: 0.45rem;
+    margin-top: 0.15rem;
+    padding-top: 0.14rem;
+    font-size: 0.38rem;
   }
 
   .gallery-collage--roof .gallery-photo:nth-child(1),
