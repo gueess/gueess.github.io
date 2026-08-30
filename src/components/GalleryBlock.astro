@@ -15,11 +15,14 @@ interface Props {
 }
 
 const { block, photos, startIndex, priority = false } = Astro.props;
+// Collages are rendered by GalleryCollage. Keep this defensive fallback so the
+// shared block type remains safe if a new layout reaches this component.
+const layout = block.layout === "collage" ? "single" : block.layout;
 const expectedCount = {
   single: 1,
   pair: 2,
   triptych: 3,
-}[block.layout];
+}[layout];
 const images = photos.slice(0, expectedCount);
 const sizes = {
   single:
@@ -28,18 +31,18 @@ const sizes = {
       : "(max-width: 760px) 100vw, min(96vw, 1920px)",
   pair: "(max-width: 760px) 100vw, min(48vw, 960px)",
   triptych: "(max-width: 760px) 100vw, min(32vw, 720px)",
-}[block.layout];
+}[layout];
 const widths = {
   single: [720, 1280, 1920, 2400],
   pair: [640, 960, 1280, 1600],
   triptych: [480, 720, 960, 1280],
-}[block.layout];
+}[layout];
 ---
 
 <section
   class:list={[
     "gallery-block",
-    `gallery-block--${block.layout}`,
+    `gallery-block--${layout}`,
     `gallery-block--${block.variant}`,
     `gallery-block--width-${block.width}`,
     `gallery-block--gap-${block.gap}`,

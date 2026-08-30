@@ -19,8 +19,26 @@ const galleries = defineCollection({
 
     const galleryBlock = z.object({
       type: z.enum(["images", "text", "spacer"]),
-      layout: z.enum(["single", "pair", "triptych"]).default("single"),
+      layout: z
+        .enum(["single", "pair", "triptych", "collage"])
+        .default("single"),
       photoIds: z.array(z.string()).default([]),
+      collageStyle: z
+        .enum([
+          "roof",
+          "markers",
+          "shanxi-eaves",
+          "shanxi-hall",
+          "shanxi-thresholds",
+          "shanxi-grottoes",
+          "shanxi-passage",
+          "shanxi-eaves-full",
+          "shanxi-hall-full",
+          "shanxi-thresholds-full",
+          "shanxi-grottoes-full",
+          "shanxi-passage-full",
+        ])
+        .default("roof"),
       variant: z.enum(["equal", "lead-left", "lead-right"]).default("equal"),
       width: z.enum(["contained", "wide", "full"]).default("wide"),
       gap: z.enum(["tight", "normal", "wide"]).default("normal"),

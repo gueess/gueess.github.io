@@ -121,6 +121,20 @@ async function validateGallery({ slug, filePath }) {
 
     if (block.type === "spacer") continue;
 
+    if (block.layout === "collage") {
+      if (isPublished && (!Array.isArray(block.photoIds) || block.photoIds.length < 3)) {
+        errors.push(`${label}第 ${blockIndex + 1} 个拼贴块至少需要 3 张照片。`);
+      }
+      for (const photoId of block.photoIds ?? []) {
+        if (isPublished && !photoIds.has(photoId)) {
+          errors.push(
+            `${label}第 ${blockIndex + 1} 个拼贴块引用了不存在的照片：${photoId}。`,
+          );
+        }
+      }
+      continue;
+    }
+
     const count = expectedImages[block.layout];
     if (!count) {
       if (isPublished) {

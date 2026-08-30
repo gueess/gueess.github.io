@@ -497,6 +497,85 @@ textarea {
   gap: clamp(1.25rem, 3vw, 3.5rem);
 }
 
+.gallery-collage {
+  position: relative;
+  width: min(100%, 112rem);
+  margin-inline: auto;
+}
+
+.gallery-collage--roof {
+  aspect-ratio: 1.25;
+}
+
+.gallery-collage--markers {
+  aspect-ratio: 1.08;
+}
+
+.gallery-collage--shanxi-eaves {
+  aspect-ratio: 1.15;
+}
+
+.gallery-collage--shanxi-hall,
+.gallery-collage--shanxi-thresholds,
+.gallery-collage--shanxi-grottoes {
+  aspect-ratio: 0.8;
+}
+
+.gallery-collage--shanxi-passage {
+  aspect-ratio: 0.45;
+}
+
+.gallery-collage--shanxi-eaves-full {
+  aspect-ratio: 0.8;
+}
+
+.gallery-collage--shanxi-hall-full {
+  aspect-ratio: 0.7;
+}
+
+.gallery-collage--shanxi-thresholds-full {
+  aspect-ratio: 0.6;
+}
+
+.gallery-collage--shanxi-grottoes-full {
+  aspect-ratio: 0.85;
+}
+
+.gallery-collage--shanxi-passage-full {
+  aspect-ratio: 0.46;
+}
+
+.gallery-collage .gallery-photo {
+  position: absolute;
+  top: var(--collage-y);
+  left: var(--collage-x);
+  width: var(--collage-width);
+  margin: 0;
+}
+
+.gallery-collage .gallery-photo__button,
+.gallery-collage .gallery-photo__button picture,
+.gallery-collage .gallery-photo__button img {
+  display: block;
+  width: 100%;
+}
+
+.gallery-collage .gallery-photo__button img {
+  height: auto;
+}
+
+.gallery-collage .gallery-photo figcaption {
+  display: flex;
+  min-height: 1rem;
+  margin-top: 0.35rem;
+  padding-top: 0.28rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
 .gallery-photo {
   margin: 0;
 }
@@ -936,6 +1015,130 @@ textarea {
 
   .gallery-block--width-full {
     margin-inline: calc(var(--page-pad) * -1);
+  }
+
+  .gallery-collage,
+  .gallery-collage--roof,
+  .gallery-collage--markers {
+    display: grid;
+    width: 100%;
+    aspect-ratio: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  .gallery-collage .gallery-photo {
+    position: static;
+    width: auto;
+  }
+
+  /* 草稿 03 的手机端不是重新排列，而是把同一张画布等比例缩小。
+     这样编号、位置和观看顺序会和桌面端保持一致。 */
+  .gallery-collage--shanxi-eaves,
+  .gallery-collage--shanxi-hall,
+  .gallery-collage--shanxi-thresholds,
+  .gallery-collage--shanxi-grottoes,
+  .gallery-collage--shanxi-passage {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--shanxi-canvas-ratio);
+  }
+
+  .gallery-collage--shanxi-eaves-full,
+  .gallery-collage--shanxi-hall-full,
+  .gallery-collage--shanxi-thresholds-full,
+  .gallery-collage--shanxi-grottoes-full,
+  .gallery-collage--shanxi-passage-full {
+    display: block;
+    width: 100%;
+    aspect-ratio: var(--shanxi-full-canvas-ratio);
+  }
+
+  .gallery-collage--shanxi-eaves-full {
+    --shanxi-full-canvas-ratio: 0.8;
+  }
+
+  .gallery-collage--shanxi-hall-full {
+    --shanxi-full-canvas-ratio: 0.7;
+  }
+
+  .gallery-collage--shanxi-thresholds-full {
+    --shanxi-full-canvas-ratio: 0.6;
+  }
+
+  .gallery-collage--shanxi-grottoes-full {
+    --shanxi-full-canvas-ratio: 0.85;
+  }
+
+  .gallery-collage--shanxi-passage-full {
+    --shanxi-full-canvas-ratio: 0.46;
+  }
+
+  .gallery-collage--shanxi-eaves {
+    --shanxi-canvas-ratio: 1.15;
+  }
+
+  .gallery-collage--shanxi-hall,
+  .gallery-collage--shanxi-thresholds,
+  .gallery-collage--shanxi-grottoes {
+    --shanxi-canvas-ratio: 0.8;
+  }
+
+  .gallery-collage--shanxi-passage {
+    --shanxi-canvas-ratio: 0.45;
+  }
+
+  .gallery-collage--shanxi-eaves .gallery-photo,
+  .gallery-collage--shanxi-hall .gallery-photo,
+  .gallery-collage--shanxi-thresholds .gallery-photo,
+  .gallery-collage--shanxi-grottoes .gallery-photo,
+  .gallery-collage--shanxi-passage .gallery-photo {
+    position: absolute;
+    top: var(--collage-y);
+    left: var(--collage-x);
+    width: var(--collage-width);
+  }
+
+  .gallery-collage--shanxi-eaves-full .gallery-photo,
+  .gallery-collage--shanxi-hall-full .gallery-photo,
+  .gallery-collage--shanxi-thresholds-full .gallery-photo,
+  .gallery-collage--shanxi-grottoes-full .gallery-photo,
+  .gallery-collage--shanxi-passage-full .gallery-photo {
+    position: absolute;
+    top: var(--collage-y);
+    left: var(--collage-x);
+    width: var(--collage-width);
+  }
+
+  .gallery-collage--shanxi-eaves .gallery-photo figcaption,
+  .gallery-collage--shanxi-hall .gallery-photo figcaption,
+  .gallery-collage--shanxi-thresholds .gallery-photo figcaption,
+  .gallery-collage--shanxi-grottoes .gallery-photo figcaption,
+  .gallery-collage--shanxi-passage .gallery-photo figcaption {
+    min-height: 0.45rem;
+    margin-top: 0.15rem;
+    padding-top: 0.14rem;
+    font-size: 0.38rem;
+  }
+
+  .gallery-collage--shanxi-eaves-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-hall-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-thresholds-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-grottoes-full .gallery-photo figcaption,
+  .gallery-collage--shanxi-passage-full .gallery-photo figcaption {
+    min-height: 0.45rem;
+    margin-top: 0.15rem;
+    padding-top: 0.14rem;
+    font-size: 0.38rem;
+  }
+
+  .gallery-collage--roof .gallery-photo:nth-child(1),
+  .gallery-collage--roof .gallery-photo:nth-child(2),
+  .gallery-collage--roof .gallery-photo:nth-child(5),
+  .gallery-collage--roof .gallery-photo:nth-child(6),
+  .gallery-collage--markers .gallery-photo:nth-child(5),
+  .gallery-collage--markers .gallery-photo:nth-child(7) {
+    grid-column: 1 / -1;
   }
 
   .gallery-story__lead
