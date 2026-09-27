@@ -24,6 +24,16 @@ const expectedCount = {
   triptych: 3,
 }[layout];
 const images = photos.slice(0, expectedCount);
+const usesProportionalColumns =
+  block.aspect === "natural" &&
+  block.variant === "equal" &&
+  (layout === "pair" || layout === "triptych");
+const proportionalColumns = usesProportionalColumns
+  ? images
+      .map((photo) => (photo.image.width / photo.image.height).toFixed(4))
+      .map((ratio) => `${ratio}fr`)
+      .join(" ")
+  : undefined;
 const sizes = {
   single:
     block.width === "contained"
@@ -48,6 +58,7 @@ const widths = {
     `gallery-block--gap-${block.gap}`,
     `gallery-block--aspect-${block.aspect}`,
   ]}
+  style={proportionalColumns ? `--photo-columns: ${proportionalColumns}` : undefined}
 >
   {
     images.map((photo, index) => (

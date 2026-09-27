@@ -54,6 +54,7 @@ const firstSequence = sequence[0];
 const lead =
   firstSequence?.block.type === "images" &&
   firstSequence.block.layout === "single" &&
+  firstSequence.block.width === "full" &&
   firstSequence.photos.length === 1
     ? firstSequence
     : undefined;
