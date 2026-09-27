@@ -464,6 +464,20 @@ textarea {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+/* 自然比例并列时，让横竖照片围绕同一条中线，而非机械地贴齐顶部。 */
+.gallery-block--aspect-natural.gallery-block--pair,
+.gallery-block--aspect-natural.gallery-block--triptych {
+  align-items: center;
+}
+
+/* 同一行的自然比例照片按各自横竖比例分配列宽，让展示高度趋于一致。 */
+@media (min-width: 761px) {
+  .gallery-block--aspect-natural.gallery-block--equal.gallery-block--pair,
+  .gallery-block--aspect-natural.gallery-block--equal.gallery-block--triptych {
+    grid-template-columns: var(--photo-columns);
+  }
+}
+
 .gallery-block--lead-left.gallery-block--pair {
   grid-template-columns: 1.65fr 1fr;
 }
@@ -543,6 +557,20 @@ textarea {
 
 .gallery-collage--shanxi-passage-full {
   aspect-ratio: 0.46;
+}
+
+/* 这两个单元依照照片本身的横竖比例组织，不裁切，也不以等宽网格压平。 */
+.gallery-collage--shanxi-eaves-triad {
+  aspect-ratio: 1.33;
+}
+
+.gallery-collage--shanxi-eaves-tail {
+  aspect-ratio: 1.9;
+}
+
+.gallery-collage--shanxi-hall-quad {
+  /* 两排照片以相同高度收束，左右外沿也彼此对齐。 */
+  aspect-ratio: 1.1;
 }
 
 .gallery-collage .gallery-photo {
@@ -1054,6 +1082,13 @@ textarea {
     aspect-ratio: var(--shanxi-full-canvas-ratio);
   }
 
+  .gallery-collage--shanxi-eaves-triad,
+  .gallery-collage--shanxi-eaves-tail,
+  .gallery-collage--shanxi-hall-quad {
+    display: block;
+    width: 100%;
+  }
+
   .gallery-collage--shanxi-eaves-full {
     --shanxi-full-canvas-ratio: 0.8;
   }
@@ -1110,6 +1145,15 @@ textarea {
     width: var(--collage-width);
   }
 
+  .gallery-collage--shanxi-eaves-triad .gallery-photo,
+  .gallery-collage--shanxi-eaves-tail .gallery-photo,
+  .gallery-collage--shanxi-hall-quad .gallery-photo {
+    position: absolute;
+    top: var(--collage-y);
+    left: var(--collage-x);
+    width: var(--collage-width);
+  }
+
   .gallery-collage--shanxi-eaves .gallery-photo figcaption,
   .gallery-collage--shanxi-hall .gallery-photo figcaption,
   .gallery-collage--shanxi-thresholds .gallery-photo figcaption,
@@ -1126,6 +1170,15 @@ textarea {
   .gallery-collage--shanxi-thresholds-full .gallery-photo figcaption,
   .gallery-collage--shanxi-grottoes-full .gallery-photo figcaption,
   .gallery-collage--shanxi-passage-full .gallery-photo figcaption {
+    min-height: 0.45rem;
+    margin-top: 0.15rem;
+    padding-top: 0.14rem;
+    font-size: 0.38rem;
+  }
+
+  .gallery-collage--shanxi-eaves-triad .gallery-photo figcaption,
+  .gallery-collage--shanxi-eaves-tail .gallery-photo figcaption,
+  .gallery-collage--shanxi-hall-quad .gallery-photo figcaption {
     min-height: 0.45rem;
     margin-top: 0.15rem;
     padding-top: 0.14rem;

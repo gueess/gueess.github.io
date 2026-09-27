@@ -8,7 +8,9 @@ import {
   getSiteSettings,
 } from "../lib/content";
 
-const galleries = await getPublishedGalleries();
+const galleries = (await getPublishedGalleries()).filter(
+  (gallery) => !gallery.data.publication.unlisted,
+);
 const settings = await getSiteSettings();
 const [hero, ...projects] = galleries;
 ---
